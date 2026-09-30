@@ -141,23 +141,28 @@ end end end)local SPD,JPW=false,false
 local SPD_VAL,JPW_VAL=16,50
 local fabOuter=I("Frame",{Size=UDim2.new(0,60,0,60),Position=UDim2.new(.5,-30,.5,-30),BackgroundTransparency=1,ZIndex=100},sg)
 local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(12,16,24),Text="ESP",TextColor3=AC,TextSize=13,Font=Enum.Font.Michroma,BorderSizePixel=0,AutoButtonColor=false,ZIndex=101},fabOuter)
+I("UICorner",{CornerRadius=UDim.new(1,0)},MB)
 local mbS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transparency=.15},MB)
 DG(MB,MB)
 local MW,MH=280,456
 local M=I("Frame",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=BG,BackgroundTransparency=0,BorderSizePixel=0,Visible=false,Active=true,ZIndex=200},sg)
+I("UICorner",{CornerRadius=UDim.new(0,8)},M)
 local mS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transparency=0},M)
 local HD=I("TextButton",{Size=UDim2.new(1,0,0,36),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=201},M)
 local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),BackgroundTransparency=1,Text='MINHDUC',TextColor3=AC,TextSize=13,Font=Enum.Font.Michroma,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=202},HD)
 local closeBtn=I("TextButton",{Size=UDim2.new(0,20,0,20),Position=UDim2.new(1,-28,.5,-10),BackgroundColor3=Color3.fromRGB(50,20,20),Text="X",TextColor3=Color3.fromRGB(255,180,180),TextSize=12,Font=Enum.Font.Michroma,BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},HD)
+I("UICorner",{CornerRadius=UDim.new(0,5)},closeBtn)
 DG(M,HD)
 I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,36),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=205},M)
 local CT=I("Frame",{Size=UDim2.new(1,-16,1,-52),Position=UDim2.new(0,8,0,44),BackgroundTransparency=1,ZIndex=202},M)
 local F=Enum.Font.Michroma
 local function TGL2(y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,0,0,34),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.94,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},CT)
+I("UICorner",{CornerRadius=UDim.new(0,6)},row)
 local rs=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.85},row)
 I("TextLabel",{Size=UDim2.new(1,-70,1,0),Position=UDim2.new(0,14,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(235,240,250),TextSize=11,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},row)
 local track=I("Frame",{Size=UDim2.new(0,36,0,18),Position=UDim2.new(1,-46,.5,-9),BackgroundColor3=init and AC or Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},row)
+I("UICorner",{CornerRadius=UDim.new(1,0)},track)
 local trackS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=init and .2 or .7},track)
 local knob=I("TextLabel",{Size=UDim2.new(0,20,0,18),Position=init and UDim2.new(1,-20,0,0) or UDim2.new(0,0,0,0),BackgroundTransparency=1,Text="💀",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Center,TextYAlignment=Enum.TextYAlignment.Center,ZIndex=205},track)
 row.MouseEnter:Connect(function()TS:Create(row,TweenInfo.new(.12),{BackgroundTransparency=.86}):Play()TS:Create(rs,TweenInfo.new(.12),{Transparency=.55}):Play()end)
@@ -175,10 +180,13 @@ local function SLIDER(y,label,init,min,max,cb)
 local lr=I("Frame",{Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,y),BackgroundTransparency=1,ZIndex=203},CT)
 I("TextLabel",{Size=UDim2.new(.6,0,1,0),BackgroundTransparency=1,Text=label,TextColor3=Color3.fromRGB(180,190,205),TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},lr)
 local val=I("TextLabel",{Size=UDim2.new(.4,0,1,0),Position=UDim2.new(.6,0,0,0),BackgroundTransparency=1,Text=tostring(init),TextColor3=AC,TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},lr)
-local track=I("Frame",{Size=UDim2.new(1,0,0,4),Position=UDim2.new(0,0,0,y+16),BackgroundColor3=Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},CT)
+local track=I("Frame",{Size=UDim2.new(1,0,0,6),Position=UDim2.new(0,0,0,y+16),BackgroundColor3=Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},CT)
+I("UICorner",{CornerRadius=UDim.new(1,0)},track)
 local p0=(init-min)/(max-min)
 local fill=I("Frame",{Size=UDim2.new(p0,0,1,0),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=205},track)
-local knob=I("Frame",{Size=UDim2.new(0,10,0,10),Position=UDim2.new(p0,-5,-3,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=206},track)
+I("UICorner",{CornerRadius=UDim.new(1,0)},fill)
+local knob=I("Frame",{Size=UDim2.new(0,12,0,12),Position=UDim2.new(p0,-6,.5,-6),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=206},track)
+I("UICorner",{CornerRadius=UDim.new(1,0)},knob)
 local hit=I("TextButton",{Size=UDim2.new(1,0,0,18),Position=UDim2.new(0,0,0,y+8),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CT)
 local drag=false
 local function upd()
@@ -189,7 +197,7 @@ if aw<1 then return end
 local v=math.clamp((mx-ap)/aw,0,1)
 local real=math.floor(min+(max-min)*v+.5)
 fill.Size=UDim2.new(v,0,1,0)
-knob.Position=UDim2.new(v,-5,-3,0)
+knob.Position=UDim2.new(v,-6,.5,-6)
 val.Text=tostring(real)
 cb(real)
 end
@@ -212,8 +220,10 @@ local tBtns={}
 local function mkTB(x,idx)
 local t=Themes[idx]
 local b=I("TextButton",{Size=UDim2.new(0,28,0,28),Position=UDim2.new(0,x,0,318),BackgroundColor3=t.bg,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CT)
+I("UICorner",{CornerRadius=UDim.new(0,6)},b)
 local s=I("UIStroke",{Color=t.ac,Thickness=idx==TI and 2 or 1,Transparency=idx==TI and 0 or .55},b)
 local dot=I("Frame",{Size=UDim2.new(0,6,0,6),Position=UDim2.new(.5,-3,.5,-3),BackgroundColor3=t.ac,BorderSizePixel=0,Visible=idx==TI,ZIndex=204},b)
+I("UICorner",{CornerRadius=UDim.new(1,0)},dot)
 b.MouseButton1Click:Connect(function()
 TI=idx
 AC=Themes[idx].ac
@@ -239,9 +249,12 @@ mkTB(0,1)mkTB(36,2)mkTB(72,3)mkTB(108,4)mkTB(144,5)mkTB(180,6)
 I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,354),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CT)
 I("TextLabel",{Size=UDim2.new(.6,0,0,14),Position=UDim2.new(0,2,0,360),BackgroundTransparency=1,Text="OPACITY",TextColor3=Color3.fromRGB(180,190,205),TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CT)
 local opVal=I("TextLabel",{Size=UDim2.new(.4,0,0,14),Position=UDim2.new(.6,0,0,360),BackgroundTransparency=1,Text="100%",TextColor3=AC,TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=203},CT)
-local opTrack=I("Frame",{Size=UDim2.new(1,0,0,4),Position=UDim2.new(0,0,0,378),BackgroundColor3=Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},CT)
+local opTrack=I("Frame",{Size=UDim2.new(1,0,0,6),Position=UDim2.new(0,0,0,378),BackgroundColor3=Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},CT)
+I("UICorner",{CornerRadius=UDim.new(1,0)},opTrack)
 local opFill=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=205},opTrack)
-local opKnob=I("Frame",{Size=UDim2.new(0,10,0,10),Position=UDim2.new(1,-5,-3,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=206},opTrack)
+I("UICorner",{CornerRadius=UDim.new(1,0)},opFill)
+local opKnob=I("Frame",{Size=UDim2.new(0,12,0,12),Position=UDim2.new(1,-6,.5,-6),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=206},opTrack)
+I("UICorner",{CornerRadius=UDim.new(1,0)},opKnob)
 local opHit=I("TextButton",{Size=UDim2.new(1,0,0,18),Position=UDim2.new(0,0,0,370),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CT)
 local opDrag=false
 local function opUpd()
@@ -251,7 +264,7 @@ local aw=opTrack.AbsoluteSize.X
 if aw<1 then return end
 local v=math.clamp((mx-ap)/aw,0,1)
 opFill.Size=UDim2.new(v,0,1,0)
-opKnob.Position=UDim2.new(v,-5,-3,0)
+opKnob.Position=UDim2.new(v,-6,.5,-6)
 opVal.Text=math.floor(v*100).."%"
 M.BackgroundTransparency=(1-v)*.85
 end

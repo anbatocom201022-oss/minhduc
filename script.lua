@@ -1,4 +1,4 @@
-local P,R,U=game:GetService("Players"),game:GetService("RunService"),game:GetService("UserInputService")
+local P,R,U,TS=game:GetService("Players"),game:GetService("RunService"),game:GetService("UserInputService"),game:GetService("TweenService")
 local pl,pg=P.LocalPlayer,P.LocalPlayer:WaitForChild("PlayerGui")
 local cam=workspace.CurrentCamera
 for _,g in ipairs(pg:GetChildren())do if g.Name=="ESP_PvP"then g:Destroy()end end
@@ -8,7 +8,9 @@ local fd=Instance.new("Folder");fd.Name="ESP_PvPFolder";fd.Parent=workspace
 local HR,LR,OFF=1000,1000,25
 local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
 local SK,BG,AC=Color3.fromRGB(0,0,0),Color3.fromRGB(10,15,25),Color3.fromRGB(0,200,255)
-local ON,CH,BX=true,true,true
+local AC_OFF=Color3.fromRGB(40,50,65)
+local CP,CM=Color3.fromRGB(255,40,40),Color3.fromRGB(40,120,255)
+local ON,CH,BX,TP=true,true,true,true
 local D,CC={},{}
 local function I(c,p,par)local i=Instance.new(c)for k,v in pairs(p)do i[k]=v end i.Parent=par return i end
 local function DG(f,h)local d,ds,sp
@@ -20,6 +22,14 @@ local function GL(p)local ls=p:FindFirstChild("leaderstats")
 if ls then for _,n in ipairs({"Level","Lvl","Lv","level"})do local v=ls:FindFirstChild(n)if v then return PN(v.Value)end end end
 for _,fn in ipairs({"Data","Stats","BloxFruits"})do local f=p:FindFirstChild(fn)if f then for _,n in ipairs({"Level","Lvl","Lv"})do local v=f:FindFirstChild(n)if v then return PN(v.Value)end end end end
 return 0 end
+local function GT(p)local d=p:FindFirstChild("Data")
+if d then local t=d:FindFirstChild("Team")
+if t then local v=t.Value
+if type(v)=="string"then
+if v:lower():find("pirate")then return "pirate" end
+if v:lower():find("marine")then return "marine" end
+end end end
+return "unknown" end
 local function GC(id)if CC[id]then return CC[id]end local c=Color3.fromHSV((id*0.618033988749895)%1,.75,1)CC[id]=c return c end
 local function AC2(h,c)h.FillColor=c h.OutlineColor=Color3.fromRGB(255,255,255)h.FillTransparency=CH and .25 or .6 h.OutlineTransparency=0 end
 local function CE(p)if p==pl or D[p]then return end
@@ -38,7 +48,7 @@ I("UICorner",{CornerRadius=UDim.new(1,0)},hb)
 local hf=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=H1,BorderSizePixel=0},hb)
 I("UICorner",{CornerRadius=UDim.new(1,0)},hf)
 local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,28),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
-D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,c=col,l=0,t=0}end
+D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,c=col,tm=GT(p),l=0,t=0}end
 local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()D[p]=nil end
 local function CA()for p in pairs(D)do RE(p)end end
 local function RC()for p,d in pairs(D)do AC2(d.h,d.c)d.bst.Color=d.c end end
@@ -73,7 +83,7 @@ local sx,sy=vp.X/2,vp.Y-80
 if ms.Z>0 then sx,sy=ms.X,ms.Y end
 for p,d in pairs(D)do
 if not p.Parent then RE(p)else
-if FT-d.t>1 then d.t=FT d.l=GL(p)end
+if FT-d.t>1 then d.t=FT d.l=GL(p)d.tm=GT(p)end
 local ch=p.Character
 local hd=ch and ch:FindFirstChild("Head")
 local hr=ch and ch:FindFirstChild("HumanoidRootPart")
@@ -91,7 +101,14 @@ if pc>.5 then d.hf.BackgroundColor3=H1 elseif pc>.25 then d.hf.BackgroundColor3=
 d.lv.Text="Lv "..(d.l>0 and tostring(d.l)or "?")
 d.dl.Text=math.floor(ds+.5).."m"
 d.hl.Text=math.floor(hu.Health+.5).."/"..math.floor(hu.MaxHealth+.5).." HP"
-if BX and ds<=HR and ds>3 then DB(d.bx,ch)else d.bx.Visible=false end
+if BX and ds<=HR and ds>3 then
+if TP then
+if d.tm=="pirate"then d.bst.Color=CP
+elseif d.tm=="marine"then d.bst.Color=CM
+else d.bst.Color=d.c end
+else d.bst.Color=d.c end
+DB(d.bx,ch)
+else d.bx.Visible=false end
 if ds<=LR and ds>3 then
 d.ln.BackgroundColor3=d.c
 local bp,bs2=cam:WorldToScreenPoint(hr.Position)
@@ -100,44 +117,54 @@ else d.ln.Visible=false end
 else d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false end
 if ds<=HR and ds>3 then
 if d.h.Adornee~=ch then d.h.Adornee=ch end
-d.h.Enabled=true d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)
+d.h.Enabled=true
+if TP then
+if d.tm=="pirate"then d.h.FillColor=CP d.h.OutlineColor=Color3.fromRGB(255,120,120)
+elseif d.tm=="marine"then d.h.FillColor=CM d.h.OutlineColor=Color3.fromRGB(150,200,255)
+else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
+else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
 else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
 end end end)
+-- MENU
 local MB=I("TextButton",{Size=UDim2.new(0,60,0,60),Position=UDim2.new(.5,-30,.5,-30),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="ESP",TextColor3=Color3.fromRGB(255,255,255),TextSize=14,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},sg)
 I("UICorner",{CornerRadius=UDim.new(0,14)},MB)
 I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transparency=.5},MB)
 DG(MB,MB)
-local M=I("Frame",{Size=UDim2.new(0,200,0,140),BackgroundColor3=BG,BackgroundTransparency=.05,BorderSizePixel=0,Visible=false,Active=true},sg)
+local M=I("Frame",{Size=UDim2.new(0,200,0,175),BackgroundColor3=BG,BackgroundTransparency=.05,BorderSizePixel=0,Visible=false,Active=true},sg)
 I("UICorner",{CornerRadius=UDim.new(0,12)},M)
 I("UIStroke",{Color=AC,Thickness=1.2,Transparency=.35},M)
-local HD=I("TextButton",{Size=UDim2.new(1,0,0,26),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false},M)
-I("TextLabel",{Size=UDim2.new(1,-16,0,26),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text="ESP MENU",TextColor3=AC,TextSize=12,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left},HD)
+local HD=I("TextButton",{Size=UDim2.new(1,0,0,28),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false},M)
+I("TextLabel",{Size=UDim2.new(1,-16,0,28),Position=UDim2.new(0,12,0,0),BackgroundTransparency=1,Text="ESP MENU",TextColor3=AC,TextSize=12,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left},HD)
+I("Frame",{Size=UDim2.new(1,-16,0,1),Position=UDim2.new(0,8,0,28),BackgroundColor3=Color3.fromRGB(40,50,65),BorderSizePixel=0},M)
 DG(M,HD)
 MB.MouseButton1Click:Connect(function()M.Visible=not M.Visible if M.Visible then local ap=MB.AbsolutePosition local as=MB.AbsoluteSize M.Position=UDim2.fromOffset(ap.X+as.X/2-100,ap.Y+as.Y+8)end end)
-local ET=I("TextButton",{Size=UDim2.new(1,-20,0,26),Position=UDim2.new(0,10,0,32),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="ESP: ON",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},M)
-I("UICorner",{CornerRadius=UDim.new(0,6)},ET)
-I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},ET)
-ET.MouseButton1Click:Connect(function()
-ON=not ON
-if ON then ET.Text="ESP: ON"ET.BackgroundColor3=Color3.fromRGB(60,200,110)MB.BackgroundColor3=Color3.fromRGB(60,200,110)MB.Text="ESP"
-for _,p in ipairs(P:GetPlayers())do CE(p)end
-else ET.Text="ESP: OFF"ET.BackgroundColor3=Color3.fromRGB(180,40,40)MB.BackgroundColor3=Color3.fromRGB(180,40,40)MB.Text="OFF"CA()end end)
-local CT=I("TextButton",{Size=UDim2.new(1,-20,0,26),Position=UDim2.new(0,10,0,64),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="Chams: ON",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},M)
-I("UICorner",{CornerRadius=UDim.new(0,6)},CT)
-I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},CT)
-CT.MouseButton1Click:Connect(function()
-CH=not CH
-if CH then CT.Text="Chams: ON"CT.BackgroundColor3=Color3.fromRGB(60,200,110)
-else CT.Text="Chams: OFF"CT.BackgroundColor3=Color3.fromRGB(180,40,40)end
-RC()end)
-local BT=I("TextButton",{Size=UDim2.new(1,-20,0,26),Position=UDim2.new(0,10,0,96),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="Box: ON",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},M)
-I("UICorner",{CornerRadius=UDim.new(0,6)},BT)
-I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},BT)
-BT.MouseButton1Click:Connect(function()
-BX=not BX
-if BX then BT.Text="Box: ON"BT.BackgroundColor3=Color3.fromRGB(60,200,110)
-else BT.Text="Box: OFF"BT.BackgroundColor3=Color3.fromRGB(180,40,40)
-for _,d in pairs(D)do d.bx.Visible=false end end
+-- Toggle mới
+local function TGL(y,txt,init,cb)
+local row=I("TextButton",{Size=UDim2.new(1,-20,0,30),Position=UDim2.new(0,10,0,y),BackgroundColor3=Color3.fromRGB(20,25,35),BackgroundTransparency=.3,Text="",BorderSizePixel=0,AutoButtonColor=false},M)
+I("UICorner",{CornerRadius=UDim.new(0,7)},row)
+I("TextLabel",{Size=UDim2.new(1,-60,1,0),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(230,240,250),TextSize=12,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left},row)
+local trk=I("Frame",{Size=UDim2.new(0,44,0,22),Position=UDim2.new(1,-52,.5,-11),BackgroundColor3=init and AC or AC_OFF,BorderSizePixel=0},row)
+I("UICorner",{CornerRadius=UDim.new(1,0)},trk)
+local stk=I("UIStroke",{Color=init and AC or Color3.fromRGB(60,70,90),Thickness=1,Transparency=.3},trk)
+local knb=I("Frame",{Size=UDim2.new(0,18,0,18),Position=init and UDim2.new(1,-20,.5,-9) or UDim2.new(0,2,.5,-9),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0},trk)
+I("UICorner",{CornerRadius=UDim.new(1,0)},knb)
+local ksh=I("UIStroke",{Color=Color3.fromRGB(200,200,210),Thickness=1,Transparency=.6},knb)
+local on=init
+row.MouseButton1Click:Connect(function()
+on=not on
+TS:Create(trk,TweenInfo.new(.15),{BackgroundColor3=on and AC or AC_OFF}):Play()
+TS:Create(stk,TweenInfo.new(.15),{Color=on and AC or Color3.fromRGB(60,70,90)}):Play()
+TS:Create(knb,TweenInfo.new(.15),{Position=on and UDim2.new(1,-20,.5,-9) or UDim2.new(0,2,.5,-9)}):Play()
+cb(on)
 end)
+end
+TGL(36,"ESP",ON,function(v)
+ON=v
+if ON then MB.BackgroundColor3=Color3.fromRGB(60,200,110)MB.Text="ESP"
+for _,p in ipairs(P:GetPlayers())do CE(p)end
+else MB.BackgroundColor3=Color3.fromRGB(180,40,40)MB.Text="OFF"CA()end end)
+TGL(70,"Chams",CH,function(v)CH=v RC()end)
+TGL(104,"Box",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
+TGL(138,"Team",TP,function(v)TP=v end)
 print("[ESP] OK")

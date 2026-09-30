@@ -17,12 +17,12 @@ local HR,LR,OFF=1000,1000,25
 local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
 local SK,CP,CM=Color3.fromRGB(0,0,0),Color3.fromRGB(255,40,40),Color3.fromRGB(40,120,255)
 local Themes={
-{name="Cyan",ac=Color3.fromRGB(0,200,255),bg=Color3.fromRGB(6,12,20)},
-{name="Crimson",ac=Color3.fromRGB(255,50,70),bg=Color3.fromRGB(20,6,10)},
-{name="Violet",ac=Color3.fromRGB(170,80,255),bg=Color3.fromRGB(14,6,20)},
-{name="Toxic",ac=Color3.fromRGB(60,230,100),bg=Color3.fromRGB(6,20,10)},
-{name="Gold",ac=Color3.fromRGB(255,190,50),bg=Color3.fromRGB(20,14,6)},
-{name="Blood",ac=Color3.fromRGB(180,20,20),bg=Color3.fromRGB(14,4,4)},
+{name="CYAN",ac=Color3.fromRGB(0,220,255),bg=Color3.fromRGB(4,10,16)},
+{name="CRIMSON",ac=Color3.fromRGB(255,40,70),bg=Color3.fromRGB(16,4,8)},
+{name="VIOLET",ac=Color3.fromRGB(180,70,255),bg=Color3.fromRGB(12,4,20)},
+{name="TOXIC",ac=Color3.fromRGB(50,255,100),bg=Color3.fromRGB(4,18,8)},
+{name="GOLD",ac=Color3.fromRGB(255,190,40),bg=Color3.fromRGB(18,12,4)},
+{name="BLOOD",ac=Color3.fromRGB(200,10,30),bg=Color3.fromRGB(14,2,3)},
 }
 local TI=1
 local AC=Themes[TI].ac
@@ -138,59 +138,209 @@ else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
 else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
 end end end)
--- FAB
-local MB=I("TextButton",{Size=UDim2.new(0,64,0,64),Position=UDim2.new(.5,-32,.5,-32),BackgroundColor3=Color3.fromRGB(8,10,14),BackgroundTransparency=.1,Text="ESP",TextColor3=AC,TextSize=15,Font=Enum.Font.GothamBlack,BorderSizePixel=0,AutoButtonColor=false},sg)
+
+-- ============================================================
+-- FAB PREMIUM
+-- ============================================================
+local fabOuter=I("Frame",{Size=UDim2.new(0,72,0,72),Position=UDim2.new(.5,-36,.5,-36),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=1,ZIndex=100},sg)
+local fabGlow=I("Frame",{Size=UDim2.new(0,64,0,64),Position=UDim2.new(.5,-32,.5,-32),BackgroundColor3=AC,BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=100},fabOuter)
+local fabGlowC=I("UICorner",{CornerRadius=UDim.new(1,0)},fabGlow)
+local MB=I("TextButton",{Size=UDim2.new(0,58,0,58),Position=UDim2.new(.5,-29,.5,-29),BackgroundColor3=Color3.fromRGB(6,8,12),BackgroundTransparency=.05,Text="ESP",TextColor3=AC,TextSize=16,Font=Enum.Font.GothamBlack,BorderSizePixel=0,AutoButtonColor=false,ZIndex=101},fabOuter)
 local mbS=I("UIStroke",{Color=AC,Thickness=2,Transparency=0},MB)
+local mbC=I("UICorner",{CornerRadius=UDim.new(1,0)},mbC)
+local mbCorner=I("UICorner",{CornerRadius=UDim.new(1,0)},MB)
 DG(MB,MB)
--- MENU
-local M=I("Frame",{Size=UDim2.new(0,240,0,290),BackgroundColor3=BG,BackgroundTransparency=.25,BorderSizePixel=0,Visible=false,Active=true},sg)
-local mS=I("UIStroke",{Color=AC,Thickness=2,Transparency=.1},M)
-local bar1=I("Frame",{Size=UDim2.new(1,0,0,3),BackgroundColor3=AC,BorderSizePixel=0},M)
-local bar2=I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,4),BackgroundColor3=AC,BackgroundTransparency=.6,BorderSizePixel=0},M)
-local HD=I("TextButton",{Size=UDim2.new(1,0,0,54),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false},M)
-local hdr=I("TextLabel",{Size=UDim2.new(1,-16,0,24),Position=UDim2.new(0,12,0,8),BackgroundTransparency=1,RichText=true,Text='<i>minhduc///</i>',TextColor3=AC,TextSize=22,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Left,TextStrokeTransparency=.3,TextStrokeColor3=Color3.fromRGB(0,0,0)},M)
-I("TextLabel",{Size=UDim2.new(1,-16,0,12),Position=UDim2.new(0,12,0,32),BackgroundTransparency=1,Text="▰ PVP SYSTEM v2.0 ▰",TextColor3=Color3.fromRGB(140,150,170),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left},M)
-local vTag=I("TextLabel",{Size=UDim2.new(0,50,0,16),Position=UDim2.new(1,-58,0,12),BackgroundColor3=AC,BackgroundTransparency=.3,Text="v2.0",TextColor3=Color3.fromRGB(255,255,255),TextSize=10,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Center,BorderSizePixel=0},M)
-I("UIStroke",{Color=AC,Thickness=1},vTag)
-local div=I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,54),BackgroundColor3=AC,BackgroundTransparency=.5,BorderSizePixel=0},M)
+
+-- pulse glow
+task.spawn(function()
+while true do
+TS:Create(fabGlow,TweenInfo.new(.8,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{Size=UDim2.new(0,80,0,80),Position=UDim2.new(.5,-40,.5,-40),BackgroundTransparency=.95}):Play()
+task.wait(.8)
+TS:Create(fabGlow,TweenInfo.new(.8,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{Size=UDim2.new(0,64,0,64),Position=UDim2.new(.5,-32,.5,-32),BackgroundTransparency=.8}):Play()
+task.wait(.8)
+end
+end)
+
+-- ============================================================
+-- MENU PREMIUM
+-- ============================================================
+local M=I("Frame",{Size=UDim2.new(0,260,0,320),BackgroundColor3=BG,BackgroundTransparency=.12,BorderSizePixel=0,Visible=false,Active=true,ZIndex=200},sg)
+local mS=I("UIStroke",{Color=AC,Thickness=1.5,Transparency=.1},M)
+-- outer glow ring
+local glowRing=I("Frame",{Size=UDim2.new(1,8,1,8),Position=UDim2.new(0,-4,0,-4),BackgroundColor3=AC,BackgroundTransparency=.92,BorderSizePixel=0,ZIndex=199},M)
+
+-- top scan bar (animated)
+local scanLine=I("Frame",{Size=UDim2.new(0,60,0,2),Position=UDim2.new(0,0,0,0),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.2,BorderSizePixel=0,ZIndex=210},M)
+task.spawn(function()
+while true do
+local w=M.AbsoluteSize.X
+TS:Create(scanLine,TweenInfo.new(1.2,Enum.EasingStyle.Linear),{Position=UDim2.new(0,w-60,0,0)}):Play()
+task.wait(1.2)
+scanLine.Position=UDim2.new(0,-60,0,0)
+end
+end)
+
+-- corner brackets
+local function bracket(x,y,ax,ay,rz)
+local b=I("Frame",{Size=UDim2.new(0,16,0,16),Position=UDim2.new(x,y),AnchorPoint=Vector2.new(ax,ay),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=205},M)
+I("Frame",{Size=UDim2.new(0,16,0,2),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=206},b)
+I("Frame",{Size=UDim2.new(0,2,0,16),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=206},b)
+end
+bracket(0,0,0,0)
+bracket(1,0,1,0)
+bracket(0,1,0,1)
+bracket(1,1,1,1)
+
+-- Header
+local HD=I("TextButton",{Size=UDim2.new(1,0,0,60),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=201},M)
+local hdr=I("TextLabel",{
+Size=UDim2.new(1,-24,0,26),
+Position=UDim2.new(0,16,0,10),
+BackgroundTransparency=1,
+RichText=true,
+Text='<i>minhduc///</i>',
+TextColor3=AC,
+TextSize=26,
+Font=Enum.Font.GothamBlack,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextStrokeTransparency=.2,
+TextStrokeColor3=Color3.fromRGB(0,0,0),
+ZIndex=202,
+},M)
+I("TextLabel",{
+Size=UDim2.new(1,-24,0,12),
+Position=UDim2.new(0,16,0,38),
+BackgroundTransparency=1,
+Text="▰ ▰  PREMIUM PVP SUITE  ▰ ▰",
+TextColor3=Color3.fromRGB(130,145,165),
+TextSize=9,
+Font=Enum.Font.GothamBold,
+TextXAlignment=Enum.TextXAlignment.Left,
+ZIndex=202,
+},M)
+-- status dot top right
+local statusDot=I("Frame",{Size=UDim2.new(0,8,0,8),Position=UDim2.new(1,-50,0,16),BackgroundColor3=Color3.fromRGB(80,255,120),BorderSizePixel=0,ZIndex=203},M)
+I("UICorner",{CornerRadius=UDim.new(1,0)},statusDot)
+task.spawn(function()
+while true do
+local c=statusDot.BackgroundColor3
+TS:Create(statusDot,TweenInfo.new(.5),{BackgroundTransparency=.7}):Play()
+task.wait(.5)
+TS:Create(statusDot,TweenInfo.new(.5),{BackgroundTransparency=0}):Play()
+task.wait(.5)
+end
+end)
+-- version tag
+local vTag=I("TextLabel",{Size=UDim2.new(0,56,0,16),Position=UDim2.new(1,-70,0,40),BackgroundColor3=AC,BackgroundTransparency=.25,Text="v2.0",TextColor3=Color3.fromRGB(255,255,255),TextSize=10,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Center,BorderSizePixel=0,ZIndex=203},M)
+I("UIStroke",{Color=AC,Thickness=1,Transparency=.2},vTag)
+-- divider
+local div=I("Frame",{Size=UDim2.new(1,-16,0,1),Position=UDim2.new(0,8,0,60),BackgroundColor3=AC,BackgroundTransparency=.4,BorderSizePixel=0,ZIndex=204},M)
 DG(M,HD)
+
 MB.MouseButton1Click:Connect(function()
 M.Visible=not M.Visible
-TS:Create(blur,TweenInfo.new(.2),{Size=M.Visible and 14 or 0}):Play()
-if M.Visible then local ap=MB.AbsolutePosition local as=MB.AbsoluteSize M.Position=UDim2.fromOffset(ap.X+as.X/2-120,ap.Y+as.Y+10)end end)
--- Toggle
+TS:Create(blur,TweenInfo.new(.2),{Size=M.Visible and 16 or 0}):Play()
+if M.Visible then
+local ap=MB.AbsolutePosition
+local as=MB.AbsoluteSize
+M.Position=UDim2.fromOffset(ap.X+as.X/2-130,ap.Y+as.Y+12)
+end
+end)
+
+-- ============================================================
+-- TOGGLE PREMIUM
+-- ============================================================
 local function TGL(y,txt,init,cb)
-local row=I("TextButton",{Size=UDim2.new(1,-16,0,34),Position=UDim2.new(0,8,0,y),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.96,Text="",BorderSizePixel=0,AutoButtonColor=false},M)
-I("UIStroke",{Color=AC,Thickness=1,Transparency=.85},row)
-local accent=I("Frame",{Size=UDim2.new(0,3,1,0),BackgroundColor3=init and AC or Color3.fromRGB(40,50,65),BorderSizePixel=0},row)
-I("TextLabel",{Size=UDim2.new(1,-78,1,0),Position=UDim2.new(0,14,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(240,245,255),TextSize=13,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Left},row)
-local dot=I("Frame",{Size=UDim2.new(0,6,0,6),Position=UDim2.new(1,-58,.5,-3),BackgroundColor3=init and AC or Color3.fromRGB(60,70,85),BorderSizePixel=0},row)
-I("UICorner",{CornerRadius=UDim.new(1,0)},dot)
-local boxBg=I("Frame",{Size=UDim2.new(0,44,0,20),Position=UDim2.new(1,-50,.5,-10),BackgroundColor3=init and AC or Color3.fromRGB(30,38,50),BorderSizePixel=0},row)
-local boxS=I("UIStroke",{Color=init and AC or Color3.fromRGB(70,80,100),Thickness=1,Transparency=init and 0 or .3},boxBg)
-local boxT=I("TextLabel",{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,Text=init and "ON" or "OFF",TextColor3=init and Color3.fromRGB(255,255,255) or Color3.fromRGB(150,160,175),TextSize=10,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Center},boxBg)
+local row=I("TextButton",{
+Size=UDim2.new(1,-20,0,36),
+Position=UDim2.new(0,10,0,y),
+BackgroundColor3=Color3.fromRGB(255,255,255),
+BackgroundTransparency=.95,
+Text="",
+BorderSizePixel=0,
+AutoButtonColor=false,
+ZIndex=202,
+},M)
+local rs=I("UIStroke",{Color=AC,Thickness=1,Transparency=init and .5 or .85},row)
+-- accent bar trái
+local accent=I("Frame",{Size=UDim2.new(0,3,1,-8),Position=UDim2.new(0,0,0,4),BackgroundColor3=init and AC or Color3.fromRGB(30,40,55),BorderSizePixel=0,ZIndex=203},row)
+-- label
+I("TextLabel",{
+Size=UDim2.new(1,-90,1,0),
+Position=UDim2.new(0,16,0,0),
+BackgroundTransparency=1,
+Text=txt,
+TextColor3=Color3.fromRGB(240,245,255),
+TextSize=13,
+Font=Enum.Font.GothamBlack,
+TextXAlignment=Enum.TextXAlignment.Left,
+ZIndex=203,
+},row)
+-- status tag
+local tag=I("TextLabel",{
+Size=UDim2.new(0,44,0,18),
+Position=UDim2.new(1,-50,.5,-9),
+BackgroundColor3=init and AC or Color3.fromRGB(25,32,44),
+BackgroundTransparency=init and .1 or .3,
+Text=init and "ON" or "OFF",
+TextColor3=init and Color3.fromRGB(255,255,255) or Color3.fromRGB(120,135,155),
+TextSize=10,
+Font=Enum.Font.GothamBlack,
+TextXAlignment=Enum.TextXAlignment.Center,
+BorderSizePixel=0,
+ZIndex=204,
+},row)
+local tagS=I("UIStroke",{Color=init and AC or Color3.fromRGB(60,72,90),Thickness=1,Transparency=init and 0 or .3},tag)
+-- right side mini dot
+local dot=I("Frame",{Size=UDim2.new(0,4,0,20),Position=UDim2.new(1,-6,.5,-10),BackgroundColor3=init and AC or Color3.fromRGB(40,50,65),BorderSizePixel=0,ZIndex=203},row)
 local on=init
 row.MouseButton1Click:Connect(function()
 on=not on
-TS:Create(accent,TweenInfo.new(.12),{BackgroundColor3=on and AC or Color3.fromRGB(40,50,65)}):Play()
-TS:Create(boxBg,TweenInfo.new(.12),{BackgroundColor3=on and AC or Color3.fromRGB(30,38,50)}):Play()
-TS:Create(boxS,TweenInfo.new(.12),{Color=on and AC or Color3.fromRGB(70,80,100)}):Play()
-boxT.Text=on and "ON" or "OFF"
-boxT.TextColor3=on and Color3.fromRGB(255,255,255) or Color3.fromRGB(150,160,175)
-dot.BackgroundColor3=on and AC or Color3.fromRGB(60,70,85)
-cb(on)end)end
-TGL(60,"ESP",ON,function(v)ON=v if ON then MB.TextColor3=AC for _,p in ipairs(P:GetPlayers())do CE(p)end else MB.TextColor3=Color3.fromRGB(150,150,160)CA()end end)
-TGL(98,"CHAMS",CH,function(v)CH=v RC()end)
-TGL(136,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
-TGL(174,"TEAM",TP,function(v)TP=v end)
-I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,214),BackgroundColor3=AC,BackgroundTransparency=.5,BorderSizePixel=0},M)
-I("TextLabel",{Size=UDim2.new(1,-16,0,14),Position=UDim2.new(0,12,0,220),BackgroundTransparency=1,Text="▰ THEME ▰",TextColor3=AC,TextSize=10,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Left},M)
+TS:Create(accent,TweenInfo.new(.15),{BackgroundColor3=on and AC or Color3.fromRGB(30,40,55)}):Play()
+TS:Create(tag,TweenInfo.new(.15),{BackgroundColor3=on and AC or Color3.fromRGB(25,32,44),BackgroundTransparency=on and .1 or .3}):Play()
+TS:Create(tagS,TweenInfo.new(.15),{Color=on and AC or Color3.fromRGB(60,72,90)}):Play()
+tag.Text=on and "ON" or "OFF"
+tag.TextColor3=on and Color3.fromRGB(255,255,255) or Color3.fromRGB(120,135,155)
+TS:Create(dot,TweenInfo.new(.15),{BackgroundColor3=on and AC or Color3.fromRGB(40,50,65)}):Play()
+cb(on)end)
+end
+
+TGL(68,"▸ ESP",ON,function(v)ON=v if ON then MB.TextColor3=AC for _,p in ipairs(P:GetPlayers())do CE(p)end else MB.TextColor3=Color3.fromRGB(140,140,150)CA()end end)
+TGL(108,"▸ CHAMS",CH,function(v)CH=v RC()end)
+TGL(148,"▸ BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
+TGL(188,"▸ TEAM",TP,function(v)TP=v end)
+
+-- divider 2
+I("Frame",{Size=UDim2.new(1,-16,0,1),Position=UDim2.new(0,8,0,230),BackgroundColor3=AC,BackgroundTransparency=.4,BorderSizePixel=0,ZIndex=204},M)
+
+-- theme label
+I("TextLabel",{
+Size=UDim2.new(1,-24,0,14),
+Position=UDim2.new(0,16,0,238),
+BackgroundTransparency=1,
+Text="▰ THEME ▰",
+TextColor3=AC,
+TextSize=10,
+Font=Enum.Font.GothamBlack,
+TextXAlignment=Enum.TextXAlignment.Left,
+ZIndex=202,
+},M)
+
+-- Theme buttons
 local tBtns={}
 local function mkTB(x,idx)
 local t=Themes[idx]
-local b=I("TextButton",{Size=UDim2.new(0,34,0,26),Position=UDim2.new(0,x,0,240),BackgroundColor3=t.ac,BorderSizePixel=0,Text="",AutoButtonColor=false},M)
-local s=I("UIStroke",{Color=idx==TI and Color3.fromRGB(255,255,255) or Color3.fromRGB(60,70,85),Thickness=idx==TI and 2 or 1,Transparency=idx==TI and 0 or .4},b)
-local tick=I("Frame",{Size=UDim2.new(0,6,0,6),Position=UDim2.new(1,0,0,0),AnchorPoint=Vector2.new(1,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,Visible=idx==TI},b)
+local b=I("TextButton",{
+Size=UDim2.new(0,36,0,28),
+Position=UDim2.new(0,x,0,258),
+BackgroundColor3=t.ac,
+BorderSizePixel=0,
+Text="",
+AutoButtonColor=false,
+ZIndex=203,
+},M)
+local s=I("UIStroke",{Color=idx==TI and Color3.fromRGB(255,255,255) or Color3.fromRGB(50,60,75),Thickness=idx==TI and 2 or 1,Transparency=idx==TI and 0 or .4},b)
+local tick=I("Frame",{Size=UDim2.new(0,6,0,6),Position=UDim2.new(1,0,0,0),AnchorPoint=Vector2.new(1,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,Visible=idx==TI,ZIndex=204},b)
 b.MouseButton1Click:Connect(function()
 TI=idx
 AC=Themes[idx].ac
@@ -199,22 +349,23 @@ M.BackgroundColor3=BG
 mS.Color=AC
 mbS.Color=AC
 MB.TextColor3=AC
-bar1.BackgroundColor3=AC
-bar2.BackgroundColor3=AC
 hdr.TextColor3=AC
 div.BackgroundColor3=AC
 vTag.BackgroundColor3=AC
-for _,bb in ipairs(tBtns)do bb.s.Color=Color3.fromRGB(60,70,85)bb.s.Thickness=1 bb.s.Transparency=.4 bb.tick.Visible=false end
+fabGlow.BackgroundColor3=AC
+scanLine.BackgroundColor3=AC
+glowRing.BackgroundColor3=AC
+for _,bb in ipairs(tBtns)do bb.s.Color=Color3.fromRGB(50,60,75)bb.s.Thickness=1 bb.s.Transparency=.4 bb.tick.Visible=false end
 s.Color=Color3.fromRGB(255,255,255)
 s.Thickness=2
 s.Transparency=0
 tick.Visible=true
 end)
 tBtns[idx]={btn=b,s=s,tick=tick}end
-mkTB(12,1)
-mkTB(50,2)
-mkTB(88,3)
-mkTB(126,4)
-mkTB(164,5)
-mkTB(202,6)
-print("[ESP] OK")
+mkTB(14,1)
+mkTB(54,2)
+mkTB(94,3)
+mkTB(134,4)
+mkTB(174,5)
+mkTB(214,6)
+print("[ESP] PREMIUM UI LOADED")

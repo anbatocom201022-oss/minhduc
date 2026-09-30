@@ -137,56 +137,83 @@ else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
 else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
-end end end)local fabOuter=I("Frame",{Size=UDim2.new(0,60,0,60),Position=UDim2.new(.5,-30,.5,-30),BackgroundTransparency=1,ZIndex=100},sg)
-local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(12,16,24),Text="ESP",TextColor3=AC,TextSize=15,Font=Enum.Font.GothamBlack,BorderSizePixel=0,AutoButtonColor=false,ZIndex=101},fabOuter)
-I("UICorner",{CornerRadius=UDim.new(1,0)},MB)
+end end end)local SPD,JPW=false,false
+local SPD_VAL,JPW_VAL=16,50
+local fabOuter=I("Frame",{Size=UDim2.new(0,60,0,60),Position=UDim2.new(.5,-30,.5,-30),BackgroundTransparency=1,ZIndex=100},sg)
+local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(12,16,24),Text="ESP",TextColor3=AC,TextSize=13,Font=Enum.Font.Michroma,BorderSizePixel=0,AutoButtonColor=false,ZIndex=101},fabOuter)
 local mbS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transparency=.15},MB)
 DG(MB,MB)
-local MW,MH=280,300
+local MW,MH=280,456
 local M=I("Frame",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=BG,BackgroundTransparency=0,BorderSizePixel=0,Visible=false,Active=true,ZIndex=200},sg)
-I("UICorner",{CornerRadius=UDim.new(0,10)},M)
 local mS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transparency=0},M)
 local HD=I("TextButton",{Size=UDim2.new(1,0,0,36),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=201},M)
-local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),BackgroundTransparency=1,RichText=true,Text='<i>minhduc///</i>',TextColor3=AC,TextSize=14,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=202},HD)
-local closeBtn=I("TextButton",{Size=UDim2.new(0,20,0,20),Position=UDim2.new(1,-28,.5,-10),BackgroundColor3=Color3.fromRGB(50,20,20),Text="×",TextColor3=Color3.fromRGB(255,180,180),TextSize=15,Font=Enum.Font.GothamBlack,BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},HD)
-I("UICorner",{CornerRadius=UDim.new(0,5)},closeBtn)
+local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),BackgroundTransparency=1,Text='MINHDUC',TextColor3=AC,TextSize=13,Font=Enum.Font.Michroma,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=202},HD)
+local closeBtn=I("TextButton",{Size=UDim2.new(0,20,0,20),Position=UDim2.new(1,-28,.5,-10),BackgroundColor3=Color3.fromRGB(50,20,20),Text="X",TextColor3=Color3.fromRGB(255,180,180),TextSize=12,Font=Enum.Font.Michroma,BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},HD)
 DG(M,HD)
 I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,36),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=205},M)
 local CT=I("Frame",{Size=UDim2.new(1,-16,1,-52),Position=UDim2.new(0,8,0,44),BackgroundTransparency=1,ZIndex=202},M)
+local F=Enum.Font.Michroma
 local function TGL2(y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,0,0,34),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.94,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},CT)
-I("UICorner",{CornerRadius=UDim.new(0,7)},row)
 local rs=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.85},row)
-I("TextLabel",{Size=UDim2.new(1,-70,1,0),Position=UDim2.new(0,14,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(235,240,250),TextSize=12,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},row)
+I("TextLabel",{Size=UDim2.new(1,-70,1,0),Position=UDim2.new(0,14,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(235,240,250),TextSize=11,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},row)
 local track=I("Frame",{Size=UDim2.new(0,36,0,18),Position=UDim2.new(1,-46,.5,-9),BackgroundColor3=init and AC or Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},row)
-I("UICorner",{CornerRadius=UDim.new(1,0)},track)
 local trackS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=init and .2 or .7},track)
-local knob=I("Frame",{Size=UDim2.new(0,14,0,14),Position=init and UDim2.new(1,-16,.5,-7) or UDim2.new(0,2,.5,-7),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=205},track)
-I("UICorner",{CornerRadius=UDim.new(1,0)},knob)
+local knob=I("TextLabel",{Size=UDim2.new(0,20,0,18),Position=init and UDim2.new(1,-20,0,0) or UDim2.new(0,0,0,0),BackgroundTransparency=1,Text="💀",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Center,TextYAlignment=Enum.TextYAlignment.Center,ZIndex=205},track)
 row.MouseEnter:Connect(function()TS:Create(row,TweenInfo.new(.12),{BackgroundTransparency=.86}):Play()TS:Create(rs,TweenInfo.new(.12),{Transparency=.55}):Play()end)
 row.MouseLeave:Connect(function()TS:Create(row,TweenInfo.new(.12),{BackgroundTransparency=.94}):Play()TS:Create(rs,TweenInfo.new(.12),{Transparency=.85}):Play()end)
 local on=init
 row.MouseButton1Click:Connect(function()
 on=not on
-TS:Create(knob,TweenInfo.new(.18,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=on and UDim2.new(1,-16,.5,-7) or UDim2.new(0,2,.5,-7)}):Play()
+TS:Create(knob,TweenInfo.new(.18,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=on and UDim2.new(1,-20,0,0) or UDim2.new(0,0,0,0)}):Play()
 TS:Create(track,TweenInfo.new(.18),{BackgroundColor3=on and AC or Color3.fromRGB(40,48,62)}):Play()
 TS:Create(trackS,TweenInfo.new(.18),{Transparency=on and .2 or .7}):Play()
 cb(on)
 end)
 end
+local function SLIDER(y,label,init,min,max,cb)
+local lr=I("Frame",{Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,y),BackgroundTransparency=1,ZIndex=203},CT)
+I("TextLabel",{Size=UDim2.new(.6,0,1,0),BackgroundTransparency=1,Text=label,TextColor3=Color3.fromRGB(180,190,205),TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},lr)
+local val=I("TextLabel",{Size=UDim2.new(.4,0,1,0),Position=UDim2.new(.6,0,0,0),BackgroundTransparency=1,Text=tostring(init),TextColor3=AC,TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},lr)
+local track=I("Frame",{Size=UDim2.new(1,0,0,4),Position=UDim2.new(0,0,0,y+16),BackgroundColor3=Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},CT)
+local p0=(init-min)/(max-min)
+local fill=I("Frame",{Size=UDim2.new(p0,0,1,0),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=205},track)
+local knob=I("Frame",{Size=UDim2.new(0,10,0,10),Position=UDim2.new(p0,-5,-3,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=206},track)
+local hit=I("TextButton",{Size=UDim2.new(1,0,0,18),Position=UDim2.new(0,0,0,y+8),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CT)
+local drag=false
+local function upd()
+local mx=U:GetMouseLocation().X
+local ap=track.AbsolutePosition.X
+local aw=track.AbsoluteSize.X
+if aw<1 then return end
+local v=math.clamp((mx-ap)/aw,0,1)
+local real=math.floor(min+(max-min)*v+.5)
+fill.Size=UDim2.new(v,0,1,0)
+knob.Position=UDim2.new(v,-5,-3,0)
+val.Text=tostring(real)
+cb(real)
+end
+hit.InputBegan:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then drag=true upd()end end)
+U.InputChanged:Connect(function(i)if drag and(i.UserInputType.Name=="MouseMovement"or i.UserInputType.Name=="Touch")then upd()end end)
+U.InputEnded:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then drag=false end end)
+return val,fill
+end
 TGL2(0,"ESP",ON,function(v)ON=v if ON then MB.TextColor3=AC for _,p in ipairs(P:GetPlayers())do CE(p)end else MB.TextColor3=Color3.fromRGB(140,140,150)CA()end end)
 TGL2(40,"CHAMS",CH,function(v)CH=v RC()end)
 TGL2(80,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
 TGL2(120,"TEAM",TP,function(v)TP=v end)
-I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,168),BackgroundTransparency=1,Text="THEME",TextColor3=Color3.fromRGB(180,190,205),TextSize=9,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CT)
+TGL2(160,"SPEED",SPD,function(v)SPD=v end)
+local spdVal,spdFill=SLIDER(198,"WALK VALUE",SPD_VAL,16,300,function(v)SPD_VAL=v end)
+TGL2(226,"JUMP",JPW,function(v)JPW=v end)
+local jpwVal,jpwFill=SLIDER(264,"JUMP VALUE",JPW_VAL,50,500,function(v)JPW_VAL=v end)
+I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,296),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CT)
+I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,302),BackgroundTransparency=1,Text="THEME",TextColor3=Color3.fromRGB(180,190,205),TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CT)
 local tBtns={}
 local function mkTB(x,idx)
 local t=Themes[idx]
-local b=I("TextButton",{Size=UDim2.new(0,28,0,28),Position=UDim2.new(0,x,0,184),BackgroundColor3=t.bg,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CT)
-I("UICorner",{CornerRadius=UDim.new(0,6)},b)
+local b=I("TextButton",{Size=UDim2.new(0,28,0,28),Position=UDim2.new(0,x,0,318),BackgroundColor3=t.bg,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CT)
 local s=I("UIStroke",{Color=t.ac,Thickness=idx==TI and 2 or 1,Transparency=idx==TI and 0 or .55},b)
 local dot=I("Frame",{Size=UDim2.new(0,6,0,6),Position=UDim2.new(.5,-3,.5,-3),BackgroundColor3=t.ac,BorderSizePixel=0,Visible=idx==TI,ZIndex=204},b)
-I("UICorner",{CornerRadius=UDim.new(1,0)},dot)
 b.MouseButton1Click:Connect(function()
 TI=idx
 AC=Themes[idx].ac
@@ -195,11 +222,13 @@ M.BackgroundColor3=BG
 MB.BackgroundColor3=BG
 MB.TextColor3=AC
 hdr.TextColor3=AC
-for _,bb in ipairs(tBtns)do
-bb.s.Thickness=1
-bb.s.Transparency=.55
-bb.dot.Visible=false
-end
+spdVal.TextColor3=AC
+jpwVal.TextColor3=AC
+opVal.TextColor3=AC
+spdFill.BackgroundColor3=AC
+jpwFill.BackgroundColor3=AC
+opFill.BackgroundColor3=AC
+for _,bb in ipairs(tBtns)do bb.s.Thickness=1 bb.s.Transparency=.55 bb.dot.Visible=false end
 s.Thickness=2
 s.Transparency=0
 dot.Visible=true
@@ -207,6 +236,36 @@ end)
 tBtns[idx]={btn=b,s=s,dot=dot}
 end
 mkTB(0,1)mkTB(36,2)mkTB(72,3)mkTB(108,4)mkTB(144,5)mkTB(180,6)
+I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,354),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CT)
+I("TextLabel",{Size=UDim2.new(.6,0,0,14),Position=UDim2.new(0,2,0,360),BackgroundTransparency=1,Text="OPACITY",TextColor3=Color3.fromRGB(180,190,205),TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CT)
+local opVal=I("TextLabel",{Size=UDim2.new(.4,0,0,14),Position=UDim2.new(.6,0,0,360),BackgroundTransparency=1,Text="100%",TextColor3=AC,TextSize=9,Font=F,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=203},CT)
+local opTrack=I("Frame",{Size=UDim2.new(1,0,0,4),Position=UDim2.new(0,0,0,378),BackgroundColor3=Color3.fromRGB(40,48,62),BorderSizePixel=0,ZIndex=204},CT)
+local opFill=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=205},opTrack)
+local opKnob=I("Frame",{Size=UDim2.new(0,10,0,10),Position=UDim2.new(1,-5,-3,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=206},opTrack)
+local opHit=I("TextButton",{Size=UDim2.new(1,0,0,18),Position=UDim2.new(0,0,0,370),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CT)
+local opDrag=false
+local function opUpd()
+local mx=U:GetMouseLocation().X
+local ap=opTrack.AbsolutePosition.X
+local aw=opTrack.AbsoluteSize.X
+if aw<1 then return end
+local v=math.clamp((mx-ap)/aw,0,1)
+opFill.Size=UDim2.new(v,0,1,0)
+opKnob.Position=UDim2.new(v,-5,-3,0)
+opVal.Text=math.floor(v*100).."%"
+M.BackgroundTransparency=(1-v)*.85
+end
+opHit.InputBegan:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then opDrag=true opUpd()end end)
+U.InputChanged:Connect(function(i)if opDrag and(i.UserInputType.Name=="MouseMovement"or i.UserInputType.Name=="Touch")then opUpd()end end)
+U.InputEnded:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then opDrag=false end end)
+R.Stepped:Connect(function()
+local ch=pl.Character
+if not ch then return end
+local hu=ch:FindFirstChildOfClass("Humanoid")
+if not hu then return end
+if SPD then hu.WalkSpeed=SPD_VAL end
+if JPW then hu.UseJumpPower=true hu.JumpPower=JPW_VAL end
+end)
 MB.MouseButton1Click:Connect(function()
 M.Visible=not M.Visible
 TS:Create(blur,TweenInfo.new(.15),{Size=M.Visible and 12 or 0}):Play()

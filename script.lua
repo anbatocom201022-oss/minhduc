@@ -1,0 +1,143 @@
+local P,R,U=game:GetService("Players"),game:GetService("RunService"),game:GetService("UserInputService")
+local pl,pg=P.LocalPlayer,P.LocalPlayer:WaitForChild("PlayerGui")
+local cam=workspace.CurrentCamera
+for _,g in ipairs(pg:GetChildren())do if g.Name=="ESP_PvP"then g:Destroy()end end
+for _,f in ipairs(workspace:GetChildren())do if f.Name=="ESP_PvPFolder"then f:Destroy()end end
+local sg=Instance.new("ScreenGui");sg.Name="ESP_PvP";sg.ResetOnSpawn=false;sg.IgnoreGuiInset=false;sg.DisplayOrder=999;sg.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;sg.Parent=pg
+local fd=Instance.new("Folder");fd.Name="ESP_PvPFolder";fd.Parent=workspace
+local HR,LR,OFF=1000,1000,25
+local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
+local SK,BG,AC=Color3.fromRGB(0,0,0),Color3.fromRGB(10,15,25),Color3.fromRGB(0,200,255)
+local ON,CH,BX=true,true,true
+local D,CC={},{}
+local function I(c,p,par)local i=Instance.new(c)for k,v in pairs(p)do i[k]=v end i.Parent=par return i end
+local function DG(f,h)local d,ds,sp
+h.InputBegan:Connect(function(i)if i.UserInputType.Name:find("MouseButton1")or i.UserInputType.Name:find("Touch")then d=true;ds=i.Position;sp=f.Position end end)
+U.InputChanged:Connect(function(i)if d and(i.UserInputType.Name:find("MouseMovement")or i.UserInputType.Name:find("Touch"))then local v=i.Position-ds;f.Position=UDim2.new(sp.X.Scale,sp.X.Offset+v.X,sp.Y.Scale,sp.Y.Offset+v.Y)end end)
+U.InputEnded:Connect(function(i)if i.UserInputType.Name:find("MouseButton1")or i.UserInputType.Name:find("Touch")then d=false end end)end
+local function PN(v)if type(v)=="number"then return v end if type(v)=="string"then return tonumber(v:gsub(",",""))or 0 end return 0 end
+local function GL(p)local ls=p:FindFirstChild("leaderstats")
+if ls then for _,n in ipairs({"Level","Lvl","Lv","level"})do local v=ls:FindFirstChild(n)if v then return PN(v.Value)end end end
+for _,fn in ipairs({"Data","Stats","BloxFruits"})do local f=p:FindFirstChild(fn)if f then for _,n in ipairs({"Level","Lvl","Lv"})do local v=f:FindFirstChild(n)if v then return PN(v.Value)end end end end
+return 0 end
+local function GC(id)if CC[id]then return CC[id]end local c=Color3.fromHSV((id*0.618033988749895)%1,.75,1)CC[id]=c return c end
+local function AC2(h,c)h.FillColor=c h.OutlineColor=Color3.fromRGB(255,255,255)h.FillTransparency=CH and .25 or .6 h.OutlineTransparency=0 end
+local function CE(p)if p==pl or D[p]then return end
+local col=GC(p.UserId)
+local h=I("Highlight",{FillColor=col,OutlineColor=Color3.fromRGB(255,255,255),FillTransparency=CH and .25 or .6,OutlineTransparency=0,DepthMode=Enum.HighlightDepthMode.AlwaysOnTop,Enabled=false},fd)
+local ln=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=5},sg)
+I("UICorner",{CornerRadius=UDim.new(1,0)},ln)
+local bx=I("Frame",{BackgroundTransparency=1,BorderSizePixel=0,Visible=false,ZIndex=6},sg)
+local bst=I("UIStroke",{Color=col,Thickness=1.5,Transparency=0},bx)
+local ct=I("Frame",{Size=UDim2.new(0,120,0,32),AnchorPoint=Vector2.new(.5,1),BackgroundTransparency=1,BorderSizePixel=0,Visible=false,ZIndex=10},sg)
+local nl=I("TextLabel",{Size=UDim2.new(1,0,0,11),BackgroundTransparency=1,Text=p.Name,TextColor3=Color3.fromRGB(255,255,255),TextSize=11,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+local lv=I("TextLabel",{Size=UDim2.new(0,60,0,10),Position=UDim2.new(0,0,0,12),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(255,215,100),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+local dl=I("TextLabel",{Size=UDim2.new(0,60,0,10),Position=UDim2.new(1,-60,0,12),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(150,200,255),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Right,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+local hb=I("Frame",{Size=UDim2.new(1,0,0,3),Position=UDim2.new(0,0,0,24),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=.5,BorderSizePixel=0},ct)
+I("UICorner",{CornerRadius=UDim.new(1,0)},hb)
+local hf=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=H1,BorderSizePixel=0},hb)
+I("UICorner",{CornerRadius=UDim.new(1,0)},hf)
+local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,28),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,c=col,l=0,t=0}end
+local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()D[p]=nil end
+local function CA()for p in pairs(D)do RE(p)end end
+local function RC()for p,d in pairs(D)do AC2(d.h,d.c)d.bst.Color=d.c end end
+for _,p in ipairs(P:GetPlayers())do CE(p)end
+P.PlayerAdded:Connect(function(p)if ON then CE(p)end end)
+P.PlayerRemoving:Connect(RE)
+local FT=0
+R.Heartbeat:Connect(function(dt)FT=FT+dt end)
+local function DL(f,x1,y1,x2,y2)local dx,dy=x2-x1,y2-y1 local L=math.sqrt(dx*dx+dy*dy)
+if L<1 then f.Visible=false return end
+f.Size=UDim2.new(0,L,0,2)f.Position=UDim2.new(0,(x1+x2)/2,0,(y1+y2)/2)f.Rotation=math.deg(math.atan2(dy,dx))f.Visible=true end
+local function DB(bx,ch)local ok,c,s=pcall(function()return ch:GetBoundingBox()end)
+if not ok or not c then bx.Visible=false return end
+local mX=math.huge MX=-math.huge mY=math.huge MY=-math.huge v=false
+for _,sx in ipairs({-1,1})do for _,sy in ipairs({-1,1})do for _,sz in ipairs({-1,1})do
+local wp=(c*CFrame.new(sx*s.X/2,sy*s.Y/2,sz*s.Z/2)).Position
+local sp,os=cam:WorldToScreenPoint(wp)
+if os and sp.Z>0 then v=true if sp.X<mX then mX=sp.X end if sp.X>MX then MX=sp.X end if sp.Y<mY then mY=sp.Y end if sp.Y>MY then MY=sp.Y end end
+end end end
+if not v then bx.Visible=false return end
+bx.Position=UDim2.new(0,mX,0,mY)bx.Size=UDim2.new(0,MX-mX,0,MY-mY)bx.Visible=true end
+R.RenderStepped:Connect(function()
+if not ON then return end
+if not cam then cam=workspace.CurrentCamera end
+if not cam then return end
+local mc=pl.Character
+local mr=mc and mc:FindFirstChild("HumanoidRootPart")
+local og=mr and mr.Position or Vector3.zero
+local vp=cam.ViewportSize
+local ms=select(1,cam:WorldToScreenPoint(og))
+local sx,sy=vp.X/2,vp.Y-80
+if ms.Z>0 then sx,sy=ms.X,ms.Y end
+for p,d in pairs(D)do
+if not p.Parent then RE(p)else
+if FT-d.t>1 then d.t=FT d.l=GL(p)end
+local ch=p.Character
+local hd=ch and ch:FindFirstChild("Head")
+local hr=ch and ch:FindFirstChild("HumanoidRootPart")
+local hu=ch and ch:FindFirstChildOfClass("Humanoid")
+if ch and hd and hr and hu and hu.Health>0 then
+local ds=0
+if mr then local v=hr.Position-og ds=math.sqrt(v.X*v.X+v.Y*v.Y+v.Z*v.Z)end
+local sp,os=cam:WorldToScreenPoint(hd.Position)
+if os and sp.Z>0 then
+d.ct.Position=UDim2.new(0,sp.X,0,sp.Y-OFF)
+d.ct.Visible=true
+local pc=hu.MaxHealth>0 and math.clamp(hu.Health/hu.MaxHealth,0,1)or 0
+d.hf.Size=UDim2.new(pc,0,1,0)
+if pc>.5 then d.hf.BackgroundColor3=H1 elseif pc>.25 then d.hf.BackgroundColor3=H2 else d.hf.BackgroundColor3=H3 end
+d.lv.Text="Lv "..(d.l>0 and tostring(d.l)or "?")
+d.dl.Text=math.floor(ds+.5).."m"
+d.hl.Text=math.floor(hu.Health+.5).."/"..math.floor(hu.MaxHealth+.5).." HP"
+if BX and ds<=HR and ds>3 then DB(d.bx,ch)else d.bx.Visible=false end
+if ds<=LR and ds>3 then
+d.ln.BackgroundColor3=d.c
+local bp,bs2=cam:WorldToScreenPoint(hr.Position)
+if bs2 and bp.Z>0 then DL(d.ln,sx,sy,bp.X,bp.Y)else d.ln.Visible=false end
+else d.ln.Visible=false end
+else d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false end
+if ds<=HR and ds>3 then
+if d.h.Adornee~=ch then d.h.Adornee=ch end
+d.h.Enabled=true d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)
+else d.h.Enabled=false end
+else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
+end end end)
+local MB=I("TextButton",{Size=UDim2.new(0,60,0,60),Position=UDim2.new(.5,-30,.5,-30),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="ESP",TextColor3=Color3.fromRGB(255,255,255),TextSize=14,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},sg)
+I("UICorner",{CornerRadius=UDim.new(0,14)},MB)
+I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transparency=.5},MB)
+DG(MB,MB)
+local M=I("Frame",{Size=UDim2.new(0,200,0,140),BackgroundColor3=BG,BackgroundTransparency=.05,BorderSizePixel=0,Visible=false,Active=true},sg)
+I("UICorner",{CornerRadius=UDim.new(0,12)},M)
+I("UIStroke",{Color=AC,Thickness=1.2,Transparency=.35},M)
+local HD=I("TextButton",{Size=UDim2.new(1,0,0,26),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false},M)
+I("TextLabel",{Size=UDim2.new(1,-16,0,26),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text="ESP MENU",TextColor3=AC,TextSize=12,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left},HD)
+DG(M,HD)
+MB.MouseButton1Click:Connect(function()M.Visible=not M.Visible if M.Visible then local ap=MB.AbsolutePosition local as=MB.AbsoluteSize M.Position=UDim2.fromOffset(ap.X+as.X/2-100,ap.Y+as.Y+8)end end)
+local ET=I("TextButton",{Size=UDim2.new(1,-20,0,26),Position=UDim2.new(0,10,0,32),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="ESP: ON",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},M)
+I("UICorner",{CornerRadius=UDim.new(0,6)},ET)
+I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},ET)
+ET.MouseButton1Click:Connect(function()
+ON=not ON
+if ON then ET.Text="ESP: ON"ET.BackgroundColor3=Color3.fromRGB(60,200,110)MB.BackgroundColor3=Color3.fromRGB(60,200,110)MB.Text="ESP"
+for _,p in ipairs(P:GetPlayers())do CE(p)end
+else ET.Text="ESP: OFF"ET.BackgroundColor3=Color3.fromRGB(180,40,40)MB.BackgroundColor3=Color3.fromRGB(180,40,40)MB.Text="OFF"CA()end end)
+local CT=I("TextButton",{Size=UDim2.new(1,-20,0,26),Position=UDim2.new(0,10,0,64),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="Chams: ON",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},M)
+I("UICorner",{CornerRadius=UDim.new(0,6)},CT)
+I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},CT)
+CT.MouseButton1Click:Connect(function()
+CH=not CH
+if CH then CT.Text="Chams: ON"CT.BackgroundColor3=Color3.fromRGB(60,200,110)
+else CT.Text="Chams: OFF"CT.BackgroundColor3=Color3.fromRGB(180,40,40)end
+RC()end)
+local BT=I("TextButton",{Size=UDim2.new(1,-20,0,26),Position=UDim2.new(0,10,0,96),BackgroundColor3=Color3.fromRGB(60,200,110),BackgroundTransparency=.15,Text="Box: ON",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false},M)
+I("UICorner",{CornerRadius=UDim.new(0,6)},BT)
+I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},BT)
+BT.MouseButton1Click:Connect(function()
+BX=not BX
+if BX then BT.Text="Box: ON"BT.BackgroundColor3=Color3.fromRGB(60,200,110)
+else BT.Text="Box: OFF"BT.BackgroundColor3=Color3.fromRGB(180,40,40)
+for _,d in pairs(D)do d.bx.Visible=false end end
+end)
+print("[ESP] OK")

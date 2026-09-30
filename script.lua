@@ -138,8 +138,6 @@ else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
 else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
 end end end)
-
--- ===== FAB =====
 local fabOuter=I("Frame",{Size=UDim2.new(0,80,0,80),Position=UDim2.new(.5,-40,.5,-40),BackgroundTransparency=1,ZIndex=100},sg)
 local fabShadow=I("Frame",{Size=UDim2.new(0,68,0,68),Position=UDim2.new(.5,-32,.5,-30),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=.65,BorderSizePixel=0,ZIndex=99},fabOuter)
 I("UICorner",{CornerRadius=UDim.new(1,0)},fabShadow)
@@ -161,8 +159,6 @@ task.wait(.9)
 TS:Create(fabGlow,TweenInfo.new(.9,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{Size=UDim2.new(0,68,0,68),Position=UDim2.new(.5,-34,.5,-34),BackgroundTransparency=.8}):Play()
 task.wait(.9)
 end end)
-
--- ===== MENU =====
 local MW,MH=300,382
 local M=I("Frame",{Size=UDim2.new(0,MW,0,MH),BackgroundColor3=BG,BackgroundTransparency=.06,BorderSizePixel=0,Visible=false,Active=true,ZIndex=200},sg)
 I("UICorner",{CornerRadius=UDim.new(0,14)},M)
@@ -211,10 +207,7 @@ local ap=MB.AbsolutePosition
 local as=MB.AbsoluteSize
 M.Position=UDim2.fromOffset(ap.X+as.X/2-MW/2,ap.Y+as.Y+14)
 end
-end)
-
--- ===== TOGGLE =====
-local function TGL(y,txt,init,cb)
+end)local function TGL(y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,-20,0,42),Position=UDim2.new(0,10,0,y),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.95,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=202},M)
 I("UICorner",{CornerRadius=UDim.new(0,10)},row)
 local rs=I("UIStroke",{Color=Color3.fromRGB(60,72,95),Thickness=1,Transparency=.55},row)
@@ -252,8 +245,6 @@ TGL(178,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visib
 TGL(226,"TEAM",TP,function(v)TP=v end)
 I("Frame",{Size=UDim2.new(1,-24,0,1),Position=UDim2.new(0,12,0,282),BackgroundColor3=AC,BackgroundTransparency=.5,BorderSizePixel=0,ZIndex=204},M)
 I("TextLabel",{Size=UDim2.new(1,-24,0,14),Position=UDim2.new(0,20,0,292),BackgroundTransparency=1,Text="▰ THEME ▰",TextColor3=AC,TextSize=10,Font=Enum.Font.GothamBlack,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=202},M)
-
--- ===== THEME =====
 local tBtns={}
 local function mkTB(x,idx)
 local t=Themes[idx]
@@ -276,4 +267,25 @@ M.BackgroundColor3=BG
 mS.Color=AC
 mbS.Color=AC
 MB.TextColor3=AC
-hd
+hdr.TextColor3=AC
+div.BackgroundColor3=AC
+vTag.BackgroundColor3=AC
+fabGlow.BackgroundColor3=AC
+scanLine.BackgroundColor3=AC
+glowRing.BackgroundColor3=AC
+fabRingS.Color=AC
+logoS.Color=AC
+logo.BackgroundColor3=AC
+for _,bb in ipairs(tBtns)do
+TS:Create(bb.s,TweenInfo.new(.2),{Transparency=1}):Play()
+TS:Create(bb.glow,TweenInfo.new(.2),{BackgroundTransparency=1}):Play()
+bb.tick.Visible=false
+end
+TS:Create(ringS,TweenInfo.new(.2),{Transparency=0}):Play()
+TS:Create(glow,TweenInfo.new(.2),{BackgroundTransparency=.75}):Play()
+tick.Visible=true
+end)
+tBtns[idx]={btn=b,s=ringS,tick=tick,glow=glow}
+end
+mkTB(20,1)mkTB(64,2)mkTB(108,3)mkTB(152,4)mkTB(196,5)mkTB(240,6)
+print("[ESP] PREMIUM UI v2 LOADED")

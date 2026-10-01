@@ -28,6 +28,7 @@ local TI=1
 local AC=Themes[TI].ac
 local BG=Themes[TI].bg
 local ON,CH,BX,TP=true,true,true,true
+local SHOW_PIRATE,SHOW_MARINE=true,true
 local D,CC={},{}
 local function PN(v)if type(v)=="number"then return v end if type(v)=="string"then return tonumber(v:gsub(",",""))or 0 end return 0 end
 local function GL(p)local ls=p:FindFirstChild("leaderstats")
@@ -113,11 +114,14 @@ if ms.Z>0 then sx,sy=ms.X,ms.Y end
 for p,d in pairs(D)do
 if not p.Parent then RE(p)else
 if FT-d.t>1 then d.t=FT d.l=GL(p)d.tm=GT(p)end
+local hideTeam=(d.tm=="pirate"and not SHOW_PIRATE)or(d.tm=="marine"and not SHOW_MARINE)
 local ch=p.Character
 local hd=ch and ch:FindFirstChild("Head")
 local hr=ch and ch:FindFirstChild("HumanoidRootPart")
 local hu=ch and ch:FindFirstChildOfClass("Humanoid")
-if ch and hd and hr and hu and hu.Health>0 then
+if hideTeam then
+d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false d.h.Enabled=false
+elseif ch and hd and hr and hu and hu.Health>0 then
 local ds=0
 if mr then local v=hr.Position-og ds=math.sqrt(v.X*v.X+v.Y*v.Y+v.Z*v.Z)end
 local sp,os=cam:WorldToScreenPoint(hd.Position)
@@ -153,10 +157,11 @@ elseif d.tm=="marine"then d.h.FillColor=CM d.h.OutlineColor=Color3.fromRGB(150,2
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
-else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
+else
+d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false
+end
 end end end)local SPD,JPW=false,false
 local SPD_VAL,JPW_VAL=16,50
--- FAB glass
 local fabOuter=I("Frame",{Size=UDim2.new(0,64,0,64),Position=UDim2.new(.5,-32,.5,-32),BackgroundTransparency=1,ZIndex=100},sg)
 local fabGlow=I("Frame",{Size=UDim2.new(1,8,1,8),Position=UDim2.new(0,-4,0,-4),BackgroundColor3=AC,BackgroundTransparency=.9,BorderSizePixel=0,ZIndex=99},fabOuter)
 I("UICorner",{CornerRadius=UDim.new(1,0)},fabGlow)
@@ -166,8 +171,7 @@ local mbS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transpar
 local mbHL=I("Frame",{Size=UDim2.new(1,-16,0,1),Position=UDim2.new(0,8,0,3),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.35,BorderSizePixel=0,ZIndex=102},MB)
 I("UIGradient",{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(.5,.3),NumberSequenceKeypoint.new(1,1)})},mbHL)
 DG(MB,MB)
--- Menu glass
-local MW,MH=520,340
+local MW,MH=620,360
 local M=I("Frame",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=BG,BackgroundTransparency=.28,BorderSizePixel=0,Visible=false,Active=true,ZIndex=200},sg)
 I("UICorner",{CornerRadius=UDim.new(0,22)},M)
 local outerGlow=I("Frame",{Size=UDim2.new(1,22,1,22),Position=UDim2.new(0,-11,0,-11),BackgroundColor3=AC,BackgroundTransparency=.93,BorderSizePixel=0,ZIndex=199},M)
@@ -177,21 +181,18 @@ local topHL=I("Frame",{Size=UDim2.new(1,-24,0,2),Position=UDim2.new(0,12,0,1),Ba
 I("UIGradient",{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(.15,.4),NumberSequenceKeypoint.new(.85,.4),NumberSequenceKeypoint.new(1,1)})},topHL)
 local botHL=I("Frame",{Size=UDim2.new(1,-24,0,1),Position=UDim2.new(0,12,1,-1),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=.7,BorderSizePixel=0,ZIndex=210},M)
 I("UIGradient",{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(.5,.7),NumberSequenceKeypoint.new(1,1)})},botHL)
--- Header
 local HD=I("TextButton",{Size=UDim2.new(1,0,0,38),BackgroundTransparency=1,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=201},M)
 local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,16,0,0),BackgroundTransparency=1,Text='MINHDUC',TextColor3=AC,TextSize=13,Font=Enum.Font.Michroma,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=202},HD)
 local closeBtn=I("TextButton",{Size=UDim2.new(0,24,0,24),Position=UDim2.new(1,-36,.5,-12),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,Text="✕",TextColor3=Color3.fromRGB(255,200,200),TextSize=12,Font=Enum.Font.GothamBold,BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},HD)
 I("UICorner",{CornerRadius=UDim.new(1,0)},closeBtn)
-local cbS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},closeBtn)
+I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},closeBtn)
 DG(M,HD)
-local divTop=I("Frame",{Size=UDim2.new(1,-32,0,1),Position=UDim2.new(0,16,0,38),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.82,BorderSizePixel=0,ZIndex=205},M)
--- 2 columns
-local CTL=I("Frame",{Size=UDim2.new(0,240,0,280),Position=UDim2.new(0,12,0,46),BackgroundTransparency=1,ZIndex=202},M)
-local CTR=I("Frame",{Size=UDim2.new(0,240,0,280),Position=UDim2.new(0,268,0,46),BackgroundTransparency=1,ZIndex=202},M)
-local vDiv=I("Frame",{Size=UDim2.new(0,1,0,280),Position=UDim2.new(0,260,0,46),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.88,BorderSizePixel=0,ZIndex=205},M)
+I("Frame",{Size=UDim2.new(1,-32,0,1),Position=UDim2.new(0,16,0,38),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.82,BorderSizePixel=0,ZIndex=205},M)
+local CTL=I("Frame",{Size=UDim2.new(0,280,0,290),Position=UDim2.new(0,14,0,46),BackgroundTransparency=1,ZIndex=202},M)
+local CTR=I("Frame",{Size=UDim2.new(0,280,0,290),Position=UDim2.new(0,306,0,46),BackgroundTransparency=1,ZIndex=202},M)
+I("Frame",{Size=UDim2.new(0,1,0,290),Position=UDim2.new(0,298,0,46),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.88,BorderSizePixel=0,ZIndex=205},M)
 local FB=Enum.Font.GothamBold
 local FM=Enum.Font.Michroma
--- Glass toggle
 local function TGL2(parent,y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,0,0,36),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.9,Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=203},parent)
 I("UICorner",{CornerRadius=UDim.new(0,12)},row)
@@ -217,7 +218,6 @@ TS:Create(trackS,TweenInfo.new(.18),{Transparency=on and .4 or .65}):Play()
 cb(on)
 end)
 end
--- Glass slider
 local function SLIDER(parent,y,label,init,min,max,cb)
 I("TextLabel",{Size=UDim2.new(.6,0,0,14),Position=UDim2.new(0,2,0,y),BackgroundTransparency=1,Text=label,TextColor3=Color3.fromRGB(210,220,235),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},parent)
 local val=I("TextLabel",{Size=UDim2.new(.4,0,0,14),Position=UDim2.new(.6,0,0,y),BackgroundTransparency=1,Text=tostring(init),TextColor3=AC,TextSize=10,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},parent)
@@ -254,12 +254,14 @@ TGL2(CTL,0,"ESP",ON,function(v)ON=v if ON then MB.TextColor3=AC for _,p in ipair
 TGL2(CTL,42,"CHAMS",CH,function(v)CH=v RC()end)
 TGL2(CTL,84,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
 TGL2(CTL,126,"TEAM",TP,function(v)TP=v end)
-local divTL=I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,174),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CTL)
-I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,180),BackgroundTransparency=1,Text="THEME",TextColor3=Color3.fromRGB(190,200,215),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CTL)
+TGL2(CTL,168,"PIRATE",SHOW_PIRATE,function(v)SHOW_PIRATE=v end)
+TGL2(CTL,210,"MARINE",SHOW_MARINE,function(v)SHOW_MARINE=v end)
+I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,254),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CTL)
+I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,260),BackgroundTransparency=1,Text="THEME",TextColor3=Color3.fromRGB(190,200,215),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CTL)
 local tBtns={}
 local function mkTB(x,idx)
 local t=Themes[idx]
-local b=I("TextButton",{Size=UDim2.new(0,32,0,32),Position=UDim2.new(0,x,0,200),BackgroundColor3=t.ac,BackgroundTransparency=.15,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CTL)
+local b=I("TextButton",{Size=UDim2.new(0,32,0,32),Position=UDim2.new(0,x,0,278),BackgroundColor3=t.ac,BackgroundTransparency=.15,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CTL)
 I("UICorner",{CornerRadius=UDim.new(0,10)},b)
 local s=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=idx==TI and 2 or 1,Transparency=idx==TI and 0 or .55},b)
 local tick=I("TextLabel",{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,Text="✓",TextColor3=Color3.fromRGB(255,255,255),TextSize=14,Font=FB,Visible=idx==TI,ZIndex=204},b)
@@ -291,10 +293,10 @@ TGL2(CTR,0,"SPEED",SPD,function(v)SPD=v end)
 local spdVal,spdFill=SLIDER(CTR,42,"WALK",SPD_VAL,16,300,function(v)SPD_VAL=v end)
 TGL2(CTR,84,"JUMP",JPW,function(v)JPW=v end)
 local jpwVal,jpwFill=SLIDER(CTR,126,"JUMP",JPW_VAL,50,500,function(v)JPW_VAL=v end)
-local divTR=I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,174),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CTR)
-I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,180),BackgroundTransparency=1,Text="OPACITY",TextColor3=Color3.fromRGB(190,200,215),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CTR)
-local opVal=I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,180),BackgroundTransparency=1,Text="100%",TextColor3=AC,TextSize=10,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=203},CTR)
-local opTrack=I("Frame",{Size=UDim2.new(1,0,0,8),Position=UDim2.new(0,0,0,200),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.88,BorderSizePixel=0,ZIndex=204},CTR)
+I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,170),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CTR)
+I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,176),BackgroundTransparency=1,Text="OPACITY",TextColor3=Color3.fromRGB(190,200,215),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CTR)
+local opVal=I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,176),BackgroundTransparency=1,Text="100%",TextColor3=AC,TextSize=10,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=203},CTR)
+local opTrack=I("Frame",{Size=UDim2.new(1,0,0,8),Position=UDim2.new(0,0,0,196),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.88,BorderSizePixel=0,ZIndex=204},CTR)
 I("UICorner",{CornerRadius=UDim.new(1,0)},opTrack)
 I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.7},opTrack)
 local opFill=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=AC,BorderSizePixel=0,ZIndex=205},opTrack)
@@ -303,7 +305,7 @@ I("UIGradient",{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,.1
 local opKnob=I("Frame",{Size=UDim2.new(0,14,0,14),Position=UDim2.new(1,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.05,BorderSizePixel=0,ZIndex=206},opTrack)
 I("UICorner",{CornerRadius=UDim.new(1,0)},opKnob)
 I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.15},opKnob)
-local opHit=I("TextButton",{Size=UDim2.new(1,0,0,22),Position=UDim2.new(0,0,0,192),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CTR)
+local opHit=I("TextButton",{Size=UDim2.new(1,0,0,22),Position=UDim2.new(0,0,0,188),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CTR)
 local opDrag=false
 local function opUpd()
 local mx=U:GetMouseLocation().X
@@ -335,15 +337,9 @@ local function hookChar(ch)
 task.wait(1)
 local hu=ch:WaitForChild("Humanoid",5)
 if not hu then return end
-hu:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
-if SPD and hu.WalkSpeed~=SPD_VAL then hu.WalkSpeed=SPD_VAL end
-end)
-hu:GetPropertyChangedSignal("JumpPower"):Connect(function()
-if JPW and hu.JumpPower~=JPW_VAL then hu.JumpPower=JPW_VAL end
-end)
-hu:GetPropertyChangedSignal("UseJumpPower"):Connect(function()
-if JPW and not hu.UseJumpPower then hu.UseJumpPower=true end
-end)
+hu:GetPropertyChangedSignal("WalkSpeed"):Connect(function()if SPD and hu.WalkSpeed~=SPD_VAL then hu.WalkSpeed=SPD_VAL end end)
+hu:GetPropertyChangedSignal("JumpPower"):Connect(function()if JPW and hu.JumpPower~=JPW_VAL then hu.JumpPower=JPW_VAL end end)
+hu:GetPropertyChangedSignal("UseJumpPower"):Connect(function()if JPW and not hu.UseJumpPower then hu.UseJumpPower=true end end)
 end
 if pl.Character then hookChar(pl.Character) end
 pl.CharacterAdded:Connect(hookChar)
@@ -355,4 +351,4 @@ closeBtn.MouseButton1Click:Connect(function()
 M.Visible=false
 TS:Create(blur,TweenInfo.new(.2),{Size=0}):Play()
 end)
-print("[ESP] LIQUID GLASS UI LOADED")
+print("[ESP] UI LOADED")

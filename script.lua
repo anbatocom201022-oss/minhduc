@@ -13,7 +13,7 @@ for _,b in ipairs(L:GetChildren())do if b:IsA("BlurEffect")and b.Name=="ESPBlur"
 local blur=I("BlurEffect",{Name="ESPBlur",Size=0},L)
 local sg=I("ScreenGui",{Name="ESP_PvP",ResetOnSpawn=false,IgnoreGuiInset=false,DisplayOrder=999,ZIndexBehavior=Enum.ZIndexBehavior.Sibling},pg)
 local fd=I("Folder",{Name="ESP_PvPFolder"},workspace)
-local HR,LR,OFF=1000,1000,25
+local HR,LR,OFF=1000,1000,30
 local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
 local SK,CP,CM=Color3.fromRGB(0,0,0),Color3.fromRGB(255,40,40),Color3.fromRGB(40,120,255)
 local Themes={
@@ -28,21 +28,40 @@ local TI=1
 local AC=Themes[TI].ac
 local BG=Themes[TI].bg
 local ON,CH,BX,TP=true,true,true,true
-local SHOW_PIRATE,SHOW_MARINE=true,true
 local D,CC={},{}
 local function PN(v)if type(v)=="number"then return v end if type(v)=="string"then return tonumber(v:gsub(",",""))or 0 end return 0 end
 local function GL(p)local ls=p:FindFirstChild("leaderstats")
 if ls then for _,n in ipairs({"Level","Lvl","Lv","level"})do local v=ls:FindFirstChild(n)if v then return PN(v.Value)end end end
 for _,fn in ipairs({"Data","Stats","BloxFruits"})do local f=p:FindFirstChild(fn)if f then for _,n in ipairs({"Level","Lvl","Lv"})do local v=f:FindFirstChild(n)if v then return PN(v.Value)end end end end
 return 0 end
-local function GT(p)local d=p:FindFirstChild("Data")
-if d then local t=d:FindFirstChild("Team")
-if t then local v=t.Value
-if type(v)=="string"then
-if v:lower():find("pirate")then return "pirate" end
-if v:lower():find("marine")then return "marine" end
-end end end
-return "unknown" end
+local function GT(p)
+local d=p:FindFirstChild("Data")
+if d then
+for _,key in ipairs({"Team","team","Faction","faction","Side","side"})do
+local t=d:FindFirstChild(key)
+if t and type(t.Value)=="string"then
+local v=t.Value:lower()
+if v:find("pirate")then return "pirate" end
+if v:find("marine")then return "marine" end
+end
+end
+end
+local pt=p.Team
+if pt then
+local n=pt.Name:lower()
+if n:find("pirate")then return "pirate" end
+if n:find("marine")then return "marine" end
+end
+for _,key in ipairs({"Team","team","Faction"})do
+local a=p:GetAttribute(key)
+if type(a)=="string"then
+local v=a:lower()
+if v:find("pirate")then return "pirate" end
+if v:find("marine")then return "marine" end
+end
+end
+return "unknown"
+end
 local function GC(id)if CC[id]then return CC[id]end local c=Color3.fromHSV((id*0.618033988749895)%1,.75,1)CC[id]=c return c end
 local function AC2(h,c)h.FillColor=c h.OutlineColor=Color3.fromRGB(255,255,255)h.FillTransparency=CH and .25 or .6 h.OutlineTransparency=0 end
 local function CE(p)if p==pl or D[p]then return end
@@ -52,16 +71,17 @@ local ln=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixe
 I("UICorner",{CornerRadius=UDim.new(1,0)},ln)
 local bx=I("Frame",{BackgroundTransparency=1,BorderSizePixel=0,Visible=false,ZIndex=6},sg)
 local bst=I("UIStroke",{Color=col,Thickness=1.5,Transparency=0},bx)
-local ct=I("Frame",{Size=UDim2.new(0,120,0,32),AnchorPoint=Vector2.new(.5,1),BackgroundTransparency=1,BorderSizePixel=0,Visible=false,ZIndex=10},sg)
+local ct=I("Frame",{Size=UDim2.new(0,140,0,44),AnchorPoint=Vector2.new(.5,1),BackgroundTransparency=1,BorderSizePixel=0,Visible=false,ZIndex=10},sg)
 I("TextLabel",{Size=UDim2.new(1,0,0,11),BackgroundTransparency=1,Text=p.Name,TextColor3=Color3.fromRGB(255,255,255),TextSize=11,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
-local lv=I("TextLabel",{Size=UDim2.new(0,60,0,10),Position=UDim2.new(0,0,0,12),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(255,215,100),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
-local dl=I("TextLabel",{Size=UDim2.new(0,60,0,10),Position=UDim2.new(1,-60,0,12),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(150,200,255),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Right,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
-local hb=I("Frame",{Size=UDim2.new(1,0,0,3),Position=UDim2.new(0,0,0,24),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=.5,BorderSizePixel=0},ct)
+local tm=I("TextLabel",{Size=UDim2.new(1,0,0,10),Position=UDim2.new(0,0,0,11),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(180,180,190),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+local lv=I("TextLabel",{Size=UDim2.new(0,70,0,10),Position=UDim2.new(0,0,0,22),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(255,215,100),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+local dl=I("TextLabel",{Size=UDim2.new(0,70,0,10),Position=UDim2.new(1,-70,0,22),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(150,200,255),TextSize=10,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Right,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+local hb=I("Frame",{Size=UDim2.new(1,0,0,3),Position=UDim2.new(0,0,0,33),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=.5,BorderSizePixel=0},ct)
 I("UICorner",{CornerRadius=UDim.new(1,0)},hb)
 local hf=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=H1,BorderSizePixel=0},hb)
 I("UICorner",{CornerRadius=UDim.new(1,0)},hf)
-local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,28),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
-D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,c=col,tm=GT(p),l=0,t=0}end
+local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,36),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
+D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,tm=tm,c=col,t=GT(p),l=0,ts=0}end
 local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()D[p]=nil end
 local function CA()for p in pairs(D)do RE(p)end end
 local function RC()for p,d in pairs(D)do AC2(d.h,d.c)d.bst.Color=d.c end end
@@ -72,7 +92,7 @@ local FT=0
 R.Heartbeat:Connect(function(dt)FT=FT+dt end)
 local function DL(f,x1,y1,x2,y2)local dx,dy=x2-x1,y2-y1 local L2=math.sqrt(dx*dx+dy*dy)
 if L2<1 then f.Visible=false return end
-f.Size=UDim2.new(0,L2,0,2)f.Position=UDim2.new(0,(x1+x2)/2,0,(y1+y2)/2)f.Rotation=math.deg(math.atan2(dy,dx))f.Visible=true end
+f.Size=UDim2.new(0,L2,0,1)f.Position=UDim2.new(0,(x1+x2)/2,0,(y1+y2)/2)f.Rotation=math.deg(math.atan2(dy,dx))f.Visible=true end
 local function DB(bx,ch)
 local hr=ch:FindFirstChild("HumanoidRootPart")
 if not hr then bx.Visible=false return end
@@ -113,21 +133,21 @@ local sx,sy=vp.X/2,vp.Y-80
 if ms.Z>0 then sx,sy=ms.X,ms.Y end
 for p,d in pairs(D)do
 if not p.Parent then RE(p)else
-if FT-d.t>1 then d.t=FT d.l=GL(p)d.tm=GT(p)end
-local hideTeam=(d.tm=="pirate"and not SHOW_PIRATE)or(d.tm=="marine"and not SHOW_MARINE)
+if FT-d.ts>1 then d.ts=FT d.l=GL(p)d.t=GT(p)end
 local ch=p.Character
 local hd=ch and ch:FindFirstChild("Head")
 local hr=ch and ch:FindFirstChild("HumanoidRootPart")
 local hu=ch and ch:FindFirstChildOfClass("Humanoid")
-if hideTeam then
-d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false d.h.Enabled=false
-elseif ch and hd and hr and hu and hu.Health>0 then
+if ch and hd and hr and hu and hu.Health>0 then
 local ds=0
 if mr then local v=hr.Position-og ds=math.sqrt(v.X*v.X+v.Y*v.Y+v.Z*v.Z)end
 local sp,os=cam:WorldToScreenPoint(hd.Position)
 if os and sp.Z>0 then
 d.ct.Position=UDim2.new(0,sp.X,0,sp.Y-OFF)
 d.ct.Visible=true
+if d.t=="pirate"then d.tm.Text="HẢI TẶC" d.tm.TextColor3=Color3.fromRGB(255,120,120)
+elseif d.t=="marine"then d.tm.Text="HẢI QUÂN" d.tm.TextColor3=Color3.fromRGB(150,200,255)
+else d.tm.Text="" end
 local pc=hu.MaxHealth>0 and math.clamp(hu.Health/hu.MaxHealth,0,1)or 0
 d.hf.Size=UDim2.new(pc,0,1,0)
 if pc>.5 then d.hf.BackgroundColor3=H1 elseif pc>.25 then d.hf.BackgroundColor3=H2 else d.hf.BackgroundColor3=H3 end
@@ -136,14 +156,18 @@ d.dl.Text=math.floor(ds+.5).."m"
 d.hl.Text=math.floor(hu.Health+.5).."/"..math.floor(hu.MaxHealth+.5).." HP"
 if BX and ds<=HR and ds>3 then
 if TP then
-if d.tm=="pirate"then d.bst.Color=CP
-elseif d.tm=="marine"then d.bst.Color=CM
+if d.t=="pirate"then d.bst.Color=CP
+elseif d.t=="marine"then d.bst.Color=CM
 else d.bst.Color=d.c end
 else d.bst.Color=d.c end
 DB(d.bx,ch)
 else d.bx.Visible=false end
 if ds<=LR and ds>3 then
-d.ln.BackgroundColor3=d.c
+if TP then
+if d.t=="pirate"then d.ln.BackgroundColor3=CP
+elseif d.t=="marine"then d.ln.BackgroundColor3=CM
+else d.ln.BackgroundColor3=d.c end
+else d.ln.BackgroundColor3=d.c end
 local bp,bs2=cam:WorldToScreenPoint(hr.Position)
 if bs2 and bp.Z>0 then DL(d.ln,sx,sy,bp.X,bp.Y)else d.ln.Visible=false end
 else d.ln.Visible=false end
@@ -152,14 +176,12 @@ if ds<=HR and ds>3 then
 if d.h.Adornee~=ch then d.h.Adornee=ch end
 d.h.Enabled=true
 if TP then
-if d.tm=="pirate"then d.h.FillColor=CP d.h.OutlineColor=Color3.fromRGB(255,120,120)
-elseif d.tm=="marine"then d.h.FillColor=CM d.h.OutlineColor=Color3.fromRGB(150,200,255)
+if d.t=="pirate"then d.h.FillColor=CP d.h.OutlineColor=Color3.fromRGB(255,120,120)
+elseif d.t=="marine"then d.h.FillColor=CM d.h.OutlineColor=Color3.fromRGB(150,200,255)
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
-else
-d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false
-end
+else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
 end end end)local SPD,JPW=false,false
 local SPD_VAL,JPW_VAL=16,50
 local fabOuter=I("Frame",{Size=UDim2.new(0,64,0,64),Position=UDim2.new(.5,-32,.5,-32),BackgroundTransparency=1,ZIndex=100},sg)
@@ -171,7 +193,7 @@ local mbS=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.5,Transpar
 local mbHL=I("Frame",{Size=UDim2.new(1,-16,0,1),Position=UDim2.new(0,8,0,3),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.35,BorderSizePixel=0,ZIndex=102},MB)
 I("UIGradient",{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(.5,.3),NumberSequenceKeypoint.new(1,1)})},mbHL)
 DG(MB,MB)
-local MW,MH=620,360
+local MW,MH=520,340
 local M=I("Frame",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=BG,BackgroundTransparency=.28,BorderSizePixel=0,Visible=false,Active=true,ZIndex=200},sg)
 I("UICorner",{CornerRadius=UDim.new(0,22)},M)
 local outerGlow=I("Frame",{Size=UDim2.new(1,22,1,22),Position=UDim2.new(0,-11,0,-11),BackgroundColor3=AC,BackgroundTransparency=.93,BorderSizePixel=0,ZIndex=199},M)
@@ -188,9 +210,9 @@ I("UICorner",{CornerRadius=UDim.new(1,0)},closeBtn)
 I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1,Transparency=.6},closeBtn)
 DG(M,HD)
 I("Frame",{Size=UDim2.new(1,-32,0,1),Position=UDim2.new(0,16,0,38),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.82,BorderSizePixel=0,ZIndex=205},M)
-local CTL=I("Frame",{Size=UDim2.new(0,280,0,290),Position=UDim2.new(0,14,0,46),BackgroundTransparency=1,ZIndex=202},M)
-local CTR=I("Frame",{Size=UDim2.new(0,280,0,290),Position=UDim2.new(0,306,0,46),BackgroundTransparency=1,ZIndex=202},M)
-I("Frame",{Size=UDim2.new(0,1,0,290),Position=UDim2.new(0,298,0,46),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.88,BorderSizePixel=0,ZIndex=205},M)
+local CTL=I("Frame",{Size=UDim2.new(0,240,0,280),Position=UDim2.new(0,12,0,46),BackgroundTransparency=1,ZIndex=202},M)
+local CTR=I("Frame",{Size=UDim2.new(0,240,0,280),Position=UDim2.new(0,268,0,46),BackgroundTransparency=1,ZIndex=202},M)
+I("Frame",{Size=UDim2.new(0,1,0,280),Position=UDim2.new(0,260,0,46),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.88,BorderSizePixel=0,ZIndex=205},M)
 local FB=Enum.Font.GothamBold
 local FM=Enum.Font.Michroma
 local function TGL2(parent,y,txt,init,cb)
@@ -254,14 +276,12 @@ TGL2(CTL,0,"ESP",ON,function(v)ON=v if ON then MB.TextColor3=AC for _,p in ipair
 TGL2(CTL,42,"CHAMS",CH,function(v)CH=v RC()end)
 TGL2(CTL,84,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
 TGL2(CTL,126,"TEAM",TP,function(v)TP=v end)
-TGL2(CTL,168,"PIRATE",SHOW_PIRATE,function(v)SHOW_PIRATE=v end)
-TGL2(CTL,210,"MARINE",SHOW_MARINE,function(v)SHOW_MARINE=v end)
-I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,254),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CTL)
-I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,260),BackgroundTransparency=1,Text="THEME",TextColor3=Color3.fromRGB(190,200,215),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CTL)
+I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,174),BackgroundColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=.85,BorderSizePixel=0,ZIndex=204},CTL)
+I("TextLabel",{Size=UDim2.new(1,0,0,12),Position=UDim2.new(0,2,0,180),BackgroundTransparency=1,Text="THEME",TextColor3=Color3.fromRGB(190,200,215),TextSize=9,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=203},CTL)
 local tBtns={}
 local function mkTB(x,idx)
 local t=Themes[idx]
-local b=I("TextButton",{Size=UDim2.new(0,32,0,32),Position=UDim2.new(0,x,0,278),BackgroundColor3=t.ac,BackgroundTransparency=.15,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CTL)
+local b=I("TextButton",{Size=UDim2.new(0,32,0,32),Position=UDim2.new(0,x,0,200),BackgroundColor3=t.ac,BackgroundTransparency=.15,BorderSizePixel=0,Text="",AutoButtonColor=false,ZIndex=203},CTL)
 I("UICorner",{CornerRadius=UDim.new(0,10)},b)
 local s=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=idx==TI and 2 or 1,Transparency=idx==TI and 0 or .55},b)
 local tick=I("TextLabel",{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,Text="✓",TextColor3=Color3.fromRGB(255,255,255),TextSize=14,Font=FB,Visible=idx==TI,ZIndex=204},b)

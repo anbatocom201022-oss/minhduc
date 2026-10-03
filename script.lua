@@ -15,7 +15,7 @@ local fd=I("Folder",{Name="ESP_PvPFolder"},workspace)
 local HR,LR,OFF=1000,1000,30
 local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
 local SK,CP,CM=Color3.fromRGB(0,0,0),Color3.fromRGB(255,40,40),Color3.fromRGB(40,120,255)
-local ON,CH,BX,TP,SKEL=true,true,true,true,false
+local ON,CH,BX,TP,SKEL,RAINBOW=true,true,true,true,false,true
 local D,CC={},{}
 local SKEL_BONES={
 {"Head","UpperTorso"},
@@ -74,10 +74,10 @@ end
 return "unknown"
 end
 local function GC(id)if CC[id]then return CC[id]end local c=Color3.fromHSV((id*0.618033988749895)%1,.75,1)CC[id]=c return c end
-local function AC2(h,c)h.FillColor=c h.OutlineColor=Color3.fromRGB(255,255,255)h.FillTransparency=CH and .25 or .6 h.OutlineTransparency=0 end
+local function AC2(h,c)h.FillColor=c h.OutlineColor=Color3.fromRGB(255,255,255)h.FillTransparency=CH and .1 or .45 h.OutlineTransparency=0 end
 local function CE(p)if p==pl or D[p]then return end
 local col=GC(p.UserId)
-local h=I("Highlight",{FillColor=col,OutlineColor=Color3.fromRGB(255,255,255),FillTransparency=CH and .25 or .6,OutlineTransparency=0,DepthMode=Enum.HighlightDepthMode.AlwaysOnTop,Enabled=false},fd)
+local h=I("Highlight",{FillColor=col,OutlineColor=Color3.fromRGB(255,255,255),FillTransparency=CH and .1 or .45,OutlineTransparency=0,DepthMode=Enum.HighlightDepthMode.AlwaysOnTop,Enabled=false},fd)
 local ln=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=5},sg)
 I("UICorner",{CornerRadius=UDim.new(1,0)},ln)
 local bx=I("Frame",{BackgroundTransparency=1,BorderSizePixel=0,Visible=false,ZIndex=6},sg)
@@ -94,12 +94,15 @@ I("UICorner",{CornerRadius=UDim.new(1,0)},hf)
 local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,36),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
 local sk={}
 for i=1,14 do
-local f=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=7},sg)
+local glow=I("Frame",{BackgroundColor3=col,BackgroundTransparency=.65,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=7},sg)
+I("UICorner",{CornerRadius=UDim.new(1,0)},glow)
+local f=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=8},sg)
 I("UICorner",{CornerRadius=UDim.new(1,0)},f)
-sk[i]=f
+local fs=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.2,Transparency=0},f)
+sk[i]={f=f,g=glow,s=fs}
 end
 D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,tm=tm,sk=sk,c=col,t=GT(p),l=0,ts=0}end
-local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()for _,f in ipairs(d.sk)do f:Destroy()end D[p]=nil end
+local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()for _,o in ipairs(d.sk)do o.f:Destroy()o.g:Destroy()end D[p]=nil end
 local function CA()for p in pairs(D)do RE(p)end end
 local function RC()for p,d in pairs(D)do AC2(d.h,d.c)d.bst.Color=d.c end end
 for _,p in ipairs(P:GetPlayers())do CE(p)end
@@ -110,19 +113,36 @@ R.Heartbeat:Connect(function(dt)FT=FT+dt end)
 local function DL(f,x1,y1,x2,y2)local dx,dy=x2-x1,y2-y1 local L2=math.sqrt(dx*dx+dy*dy)
 if L2<1 then f.Visible=false return end
 f.Size=UDim2.new(0,L2,0,1)f.Position=UDim2.new(0,(x1+x2)/2,0,(y1+y2)/2)f.Rotation=math.deg(math.atan2(dy,dx))f.Visible=true end
-local function drawBone(f,p1,p2,color)
+local function drawBone(bone,p1,p2,color)
 local s1,o1=cam:WorldToScreenPoint(p1)
 local s2,o2=cam:WorldToScreenPoint(p2)
-if not o1 or not o2 or s1.Z<=0 or s2.Z<=0 then f.Visible=false return end
+if not o1 or not o2 or s1.Z<=0 or s2.Z<=0 then
+bone.f.Visible=false
+bone.g.Visible=false
+return
+end
 local dx=s2.X-s1.X
 local dy=s2.Y-s1.Y
 local len=math.sqrt(dx*dx+dy*dy)
-if len<1 then f.Visible=false return end
-f.Size=UDim2.new(0,len,0,2)
-f.Position=UDim2.new(0,(s1.X+s2.X)/2,0,(s1.Y+s2.Y)/2)
-f.Rotation=math.deg(math.atan2(dy,dx))
-f.BackgroundColor3=color
-f.Visible=true
+if len<1 then
+bone.f.Visible=false
+bone.g.Visible=false
+return
+end
+local rot=math.deg(math.atan2(dy,dx))
+local cx=(s1.X+s2.X)/2
+local cy=(s1.Y+s2.Y)/2
+bone.f.Size=UDim2.new(0,len,0,3)
+bone.f.Position=UDim2.new(0,cx,0,cy)
+bone.f.Rotation=rot
+bone.f.BackgroundColor3=color
+bone.f.Visible=true
+bone.s.Color=color
+bone.g.Size=UDim2.new(0,len+4,0,9)
+bone.g.Position=UDim2.new(0,cx,0,cy)
+bone.g.Rotation=rot
+bone.g.BackgroundColor3=color
+bone.g.Visible=true
 end
 local function DB(bx,ch)
 local hr=ch:FindFirstChild("HumanoidRootPart")
@@ -155,6 +175,7 @@ R.RenderStepped:Connect(function()
 if not ON then return end
 if not cam then cam=workspace.CurrentCamera end
 if not cam then return end
+local T=tick()
 local mc=pl.Character
 local mr=mc and mc:FindFirstChild("HumanoidRootPart")
 local og=mr and mr.Position or Vector3.zero
@@ -188,28 +209,35 @@ d.hl.Text=math.floor(hu.Health+.5).."/"..math.floor(hu.MaxHealth+.5).." HP"
 if SKEL and ds<=HR then
 local boneList
 if ch:FindFirstChild("UpperTorso")then boneList=SKEL_BONES else boneList=SKEL_BONES_R6 end
-local bc
-if TP then
-if d.t=="pirate"then bc=CP
-elseif d.t=="marine"then bc=CM
-else bc=d.c end
-else bc=d.c end
 for i=1,14 do
 if i<=#boneList then
 local b=boneList[i]
 local p1=ch:FindFirstChild(b[1])
 local p2=ch:FindFirstChild(b[2])
 if p1 and p2 then
+local bc
+if RAINBOW then
+local hue=((T*0.35)+(i*0.06)+p.UserId*0.0001)%1
+bc=Color3.fromHSV(hue,1,1)
+else
+if TP then
+if d.t=="pirate"then bc=CP
+elseif d.t=="marine"then bc=CM
+else bc=d.c end
+else bc=d.c end
+end
 drawBone(d.sk[i],p1.Position,p2.Position,bc)
 else
-d.sk[i].Visible=false
+d.sk[i].f.Visible=false
+d.sk[i].g.Visible=false
 end
 else
-d.sk[i].Visible=false
+d.sk[i].f.Visible=false
+d.sk[i].g.Visible=false
 end
 end
 else
-for i=1,14 do d.sk[i].Visible=false end
+for i=1,14 do d.sk[i].f.Visible=false d.sk[i].g.Visible=false end
 end
 if BX and ds<=HR and ds>3 then
 if TP then
@@ -230,7 +258,7 @@ if bs2 and bp.Z>0 then DL(d.ln,sx,sy,bp.X,bp.Y)else d.ln.Visible=false end
 else d.ln.Visible=false end
 else
 d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false
-for i=1,14 do d.sk[i].Visible=false end
+for i=1,14 do d.sk[i].f.Visible=false d.sk[i].g.Visible=false end
 end
 if ds<=HR and ds>3 then
 if d.h.Adornee~=ch then d.h.Adornee=ch end
@@ -243,7 +271,7 @@ else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
 else
 d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false
-for i=1,14 do d.sk[i].Visible=false end
+for i=1,14 do d.sk[i].f.Visible=false d.sk[i].g.Visible=false end
 end
 end end end)local SPD,JPW=false,false
 local SPD_VAL,JPW_VAL=16,50
@@ -251,7 +279,7 @@ local fabOuter=I("Frame",{Size=UDim2.new(0,56,0,56),Position=UDim2.new(.5,-28,.5
 local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),Text="ESP",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=2,ZIndex=101},fabOuter)
 MB.BorderColor3=Color3.fromRGB(255,255,255)
 DG(MB,MB)
-local MW,MH=440,340
+local MW,MH=440,380
 local M=I("CanvasGroup",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(0,0,0),GroupTransparency=1,BorderSizePixel=2,Visible=false,Active=true,ZIndex=200},sg)
 M.BorderColor3=Color3.fromRGB(255,255,255)
 local MENU_OPEN=false
@@ -275,9 +303,9 @@ local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),
 local closeBtn=I("TextButton",{Size=UDim2.new(0,26,0,26),Position=UDim2.new(1,-32,.5,-13),BackgroundColor3=Color3.fromRGB(40,0,0),Text="X",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},HD)
 closeBtn.BorderColor3=Color3.fromRGB(255,255,255)
 DG(M,HD)
-local CTL=I("Frame",{Size=UDim2.new(0,200,0,280),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
-local CTR=I("Frame",{Size=UDim2.new(0,200,0,280),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
-I("Frame",{Size=UDim2.new(0,1,0,280),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
+local CTL=I("Frame",{Size=UDim2.new(0,200,0,320),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
+local CTR=I("Frame",{Size=UDim2.new(0,200,0,320),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
+I("Frame",{Size=UDim2.new(0,1,0,320),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
 local FB=Enum.Font.GothamBold
 local function TGL2(parent,y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,0,0,34),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(20,20,20),Text="",BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},parent)
@@ -324,8 +352,9 @@ TGL2(CTL,0,"ESP",ON,function(v)ON=v if ON then for _,p in ipairs(P:GetPlayers())
 TGL2(CTL,42,"CHAMS",CH,function(v)CH=v RC()end)
 TGL2(CTL,84,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
 TGL2(CTL,126,"TEAM",TP,function(v)TP=v end)
-TGL2(CTL,168,"SKELETON",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,f in ipairs(d.sk)do f.Visible=false end end end end)
-TGL2(CTL,210,"TIA",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
+TGL2(CTL,168,"SKELETON",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,o in ipairs(d.sk)do o.f.Visible=false o.g.Visible=false end end end end)
+TGL2(CTL,210,"RAINBOW",RAINBOW,function(v)RAINBOW=v end)
+TGL2(CTL,252,"TIA",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
 TGL2(CTR,0,"SPEED",SPD,function(v)SPD=v end)
 local spdVal,spdFill=SLIDER(CTR,42,"WALK",SPD_VAL,16,300,function(v)SPD_VAL=v end)
 TGL2(CTR,84,"JUMP",JPW,function(v)JPW=v end)
@@ -379,4 +408,4 @@ MB.MouseButton1Click:Connect(function()
 if MENU_OPEN then closeMenu() else openMenu() end
 end)
 closeBtn.MouseButton1Click:Connect(closeMenu)
-print("[ESP] SKELETON + ANIM LOADED")
+print("[ESP] RGB SKELETON LOADED")

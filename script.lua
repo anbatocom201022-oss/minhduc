@@ -273,11 +273,12 @@ for i=1,14 do d.sk[i].f.Visible=false d.sk[i].g.Visible=false end
 end
 end end end)local SPD,JPW=false,false
 local SPD_VAL,JPW_VAL=16,50
+local FOV_VAL=100
 local fabOuter=I("Frame",{Size=UDim2.new(0,56,0,56),Position=UDim2.new(.5,-28,.5,-28),BackgroundTransparency=1,ZIndex=100},sg)
 local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),Text="ESP",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=2,ZIndex=101},fabOuter)
 MB.BorderColor3=Color3.fromRGB(255,255,255)
 DG(MB,MB)
-local MW,MH=440,420
+local MW,MH=460,360
 local M=I("CanvasGroup",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(0,0,0),GroupTransparency=1,BorderSizePixel=2,Visible=false,Active=true,ZIndex=200},sg)
 M.BorderColor3=Color3.fromRGB(255,255,255)
 local MENU_OPEN=false
@@ -301,15 +302,38 @@ local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),
 local closeBtn=I("TextButton",{Size=UDim2.new(0,26,0,26),Position=UDim2.new(1,-32,.5,-13),BackgroundColor3=Color3.fromRGB(40,0,0),Text="X",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},HD)
 closeBtn.BorderColor3=Color3.fromRGB(255,255,255)
 DG(M,HD)
-local CTL=I("Frame",{Size=UDim2.new(0,200,0,360),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
-local CTR=I("Frame",{Size=UDim2.new(0,200,0,360),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
-I("Frame",{Size=UDim2.new(0,1,0,360),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
+local SB=I("Frame",{Size=UDim2.new(0,100,1,-36),Position=UDim2.new(0,0,0,36),BackgroundColor3=Color3.fromRGB(15,15,15),BorderSizePixel=0,ZIndex=201},M)
+I("Frame",{Size=UDim2.new(0,1,1,0),Position=UDim2.new(1,-1,0,0),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},SB)
+local CONT=I("Frame",{Size=UDim2.new(1,-100,1,-36),Position=UDim2.new(0,100,0,36),BackgroundTransparency=1,ZIndex=202},M)
 local FB=Enum.Font.GothamBold
-local function TGL2(parent,y,txt,init,cb)
-local row=I("TextButton",{Size=UDim2.new(1,0,0,34),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(20,20,20),Text="",BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},parent)
+local FT=Enum.Font.Gotham
+local PAGES={}
+local TABBTNS={}
+local function mkTab(name,y,canvasH)
+local b=I("TextButton",{Size=UDim2.new(1,-12,0,40),Position=UDim2.new(0,6,0,y),BackgroundColor3=Color3.fromRGB(25,25,25),Text="",BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},SB)
+b.BorderColor3=Color3.fromRGB(80,80,80)
+I("TextLabel",{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,Text=name,TextColor3=Color3.fromRGB(200,200,200),TextSize=13,Font=FB,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=204},b)
+local sf=I("ScrollingFrame",{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,BorderSizePixel=0,CanvasSize=UDim2.new(0,0,0,canvasH),ScrollBarThickness=4,ScrollBarImageColor3=Color3.fromRGB(120,120,120),ScrollBarImageTransparency=.2,ScrollingDirection=Enum.ScrollingDirection.Y,Visible=false,ZIndex=203},CONT)
+PAGES[name]=sf
+TABBTNS[name]={btn=b,page=sf}
+b.MouseButton1Click:Connect(function()
+for n,t in pairs(TABBTNS)do
+t.page.Visible=false
+t.btn.BackgroundColor3=Color3.fromRGB(25,25,25)
+t.btn.TextLabel.TextColor3=Color3.fromRGB(200,200,200)
+end
+sf.Visible=true
+b.BackgroundColor3=Color3.fromRGB(50,50,50)
+b.TextLabel.TextColor3=Color3.fromRGB(255,255,255)
+end)
+return sf
+end
+local function TGL2(parent,y,txt,desc,init,cb)
+local row=I("TextButton",{Size=UDim2.new(1,-20,0,34),Position=UDim2.new(0,10,0,y),BackgroundColor3=Color3.fromRGB(20,20,20),Text="",BorderSizePixel=1,AutoButtonColor=false,ZIndex=204},parent)
 row.BorderColor3=Color3.fromRGB(80,80,80)
-I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},row)
-local state=I("TextLabel",{Size=UDim2.new(0,38,1,0),Position=UDim2.new(1,-42,0,0),BackgroundTransparency=1,Text=init and "ON" or "OFF",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=204},row)
+I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=205},row)
+local state=I("TextLabel",{Size=UDim2.new(0,38,1,0),Position=UDim2.new(1,-42,0,0),BackgroundTransparency=1,Text=init and "ON" or "OFF",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=205},row)
+I("TextLabel",{Size=UDim2.new(1,-20,0,14),Position=UDim2.new(0,10,0,y+36),BackgroundTransparency=1,Text=desc,TextColor3=Color3.fromRGB(130,130,130),TextSize=10,Font=FT,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd,ZIndex=204},parent)
 local on=init
 row.MouseButton1Click:Connect(function()
 on=not on
@@ -318,16 +342,16 @@ row.BackgroundColor3=on and Color3.fromRGB(40,40,40) or Color3.fromRGB(20,20,20)
 cb(on)
 end)
 end
-local function SLIDER(parent,y,label,init,min,max,cb)
-local lr=I("Frame",{Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,y),BackgroundTransparency=1,ZIndex=204},parent)
-I("TextLabel",{Size=UDim2.new(.6,0,1,0),BackgroundTransparency=1,Text=label,TextColor3=Color3.fromRGB(200,200,200),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},lr)
-local val=I("TextLabel",{Size=UDim2.new(.4,0,1,0),Position=UDim2.new(.6,0,0,0),BackgroundTransparency=1,Text=tostring(init),TextColor3=Color3.fromRGB(255,255,255),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},lr)
-local track=I("Frame",{Size=UDim2.new(1,0,0,4),Position=UDim2.new(0,0,0,y+20),BackgroundColor3=Color3.fromRGB(50,50,50),BorderSizePixel=0,ZIndex=204},parent)
+local function SLIDER(parent,y,label,desc,init,min,max,cb)
+I("TextLabel",{Size=UDim2.new(.6,0,0,14),Position=UDim2.new(0,10,0,y),BackgroundTransparency=1,Text=label,TextColor3=Color3.fromRGB(230,230,230),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},parent)
+local val=I("TextLabel",{Size=UDim2.new(.4,-20,0,14),Position=UDim2.new(.6,0,0,y),BackgroundTransparency=1,Text=tostring(init),TextColor3=Color3.fromRGB(255,255,255),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},parent)
+local track=I("Frame",{Size=UDim2.new(1,-20,0,4),Position=UDim2.new(0,10,0,y+20),BackgroundColor3=Color3.fromRGB(50,50,50),BorderSizePixel=0,ZIndex=204},parent)
 local p0=(init-min)/(max-min)
 local fill=I("Frame",{Size=UDim2.new(p0,0,1,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=205},track)
 local knob=I("Frame",{Size=UDim2.new(0,10,0,14),Position=UDim2.new(p0,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=1,ZIndex=206},track)
 knob.BorderColor3=Color3.fromRGB(0,0,0)
-local hit=I("TextButton",{Size=UDim2.new(1,0,0,22),Position=UDim2.new(0,0,0,y+12),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},parent)
+local hit=I("TextButton",{Size=UDim2.new(1,-20,0,22),Position=UDim2.new(0,10,0,y+12),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},parent)
+I("TextLabel",{Size=UDim2.new(1,-20,0,14),Position=UDim2.new(0,10,0,y+40),BackgroundTransparency=1,Text=desc,TextColor3=Color3.fromRGB(130,130,130),TextSize=10,Font=FT,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd,ZIndex=204},parent)
 local drag=false
 local function upd()
 local mx=U:GetMouseLocation().X
@@ -346,28 +370,31 @@ U.InputChanged:Connect(function(i)if drag and(i.UserInputType.Name=="MouseMoveme
 U.InputEnded:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then drag=false end end)
 return val,fill
 end
--- CỘT TRÁI: ESP + VISUAL
-TGL2(CTL,0,"ESP",ON,function(v)ON=v if ON then for _,p in ipairs(P:GetPlayers())do CE(p)end else CA()end end)
-TGL2(CTL,42,"HIGHLIGHT",HL,function(v)HL=v if not HL then for _,d in pairs(D)do d.h.Enabled=false end end end)
-TGL2(CTL,84,"CHAMS",CH,function(v)CH=v RC()end)
-TGL2(CTL,126,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
-TGL2(CTL,168,"TEAM",TP,function(v)TP=v end)
-TGL2(CTL,210,"SKELETON",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,o in ipairs(d.sk)do o.f.Visible=false o.g.Visible=false end end end end)
-TGL2(CTL,252,"RAINBOW",RAINBOW,function(v)RAINBOW=v end)
-TGL2(CTL,294,"TIA",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
--- CỘT PHẢI: MOVEMENT
-TGL2(CTR,0,"SPEED",SPD,function(v)SPD=v end)
-local spdVal,spdFill=SLIDER(CTR,42,"WALK",SPD_VAL,16,300,function(v)SPD_VAL=v end)
-TGL2(CTR,84,"JUMP",JPW,function(v)JPW=v end)
-local jpwVal,jpwFill=SLIDER(CTR,126,"JUMP",JPW_VAL,50,500,function(v)JPW_VAL=v end)
-I("Frame",{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,0,170),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=204},CTR)
-I("TextLabel",{Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,176),BackgroundTransparency=1,Text="OPACITY",TextColor3=Color3.fromRGB(200,200,200),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},CTR)
-local opVal=I("TextLabel",{Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,176),BackgroundTransparency=1,Text="100%",TextColor3=Color3.fromRGB(255,255,255),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},CTR)
-local opTrack=I("Frame",{Size=UDim2.new(1,0,0,4),Position=UDim2.new(0,0,0,196),BackgroundColor3=Color3.fromRGB(50,50,50),BorderSizePixel=0,ZIndex=204},CTR)
+local PG_ESP=mkTab("ESP",8,480)
+TGL2(PG_ESP,4,"ESP","Bật / tắt toàn bộ hệ thống ESP",ON,function(v)ON=v if ON then for _,p in ipairs(P:GetPlayers())do CE(p)end else CA()end end)
+TGL2(PG_ESP,60,"HIGHLIGHT","Viền phát sáng xuyên tường quanh nhân vật",HL,function(v)HL=v if not HL then for _,d in pairs(D)do d.h.Enabled=false end end end)
+TGL2(PG_ESP,116,"CHAMS","Đổ màu nhân vật đậm hơn khi nhìn xuyên",CH,function(v)CH=v RC()end)
+TGL2(PG_ESP,172,"BOX","Khung vuông bao quanh nhân vật",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
+TGL2(PG_ESP,228,"TEAM","Đổi màu theo phe Hải Tặc / Hải Quân",TP,function(v)TP=v end)
+TGL2(PG_ESP,284,"SKELETON","Vẽ xương nhân vật theo khung xương",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,o in ipairs(d.sk)do o.f.Visible=false o.g.Visible=false end end end end)
+TGL2(PG_ESP,340,"RAINBOW","Xương đổi màu cầu vồng liên tục",RAINBOW,function(v)RAINBOW=v end)
+TGL2(PG_ESP,396,"TIA","Đường kẻ từ tâm màn hình tới mục tiêu",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
+local PG_OPT=mkTab("OPT",50,470)
+TGL2(PG_OPT,4,"SPEED","Bật tốc độ chạy tùy chỉnh bên dưới",SPD,function(v)SPD=v end)
+local spdVal,spdFill=SLIDER(PG_OPT,60,"WALK","Kéo để chỉnh tốc độ chạy (mặc định 16)",SPD_VAL,16,300,function(v)SPD_VAL=v end)
+TGL2(PG_OPT,116,"JUMP","Bật lực nhảy tùy chỉnh bên dưới",JPW,function(v)JPW=v end)
+local jpwVal,jpwFill=SLIDER(PG_OPT,172,"JUMP","Kéo để chỉnh lực nhảy (mặc định 50)",JPW_VAL,50,500,function(v)JPW_VAL=v end)
+I("Frame",{Size=UDim2.new(1,-20,0,1),Position=UDim2.new(0,10,0,238),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=204},PG_OPT)
+local fovVal,fovFill=SLIDER(PG_OPT,252,"FOV","Góc nhìn camera - 100 gốc, 200 nhìn xa",FOV_VAL,100,200,function(v)FOV_VAL=v end)
+I("Frame",{Size=UDim2.new(1,-20,0,1),Position=UDim2.new(0,10,0,318),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=204},PG_OPT)
+I("TextLabel",{Size=UDim2.new(1,-20,0,14),Position=UDim2.new(0,10,0,330),BackgroundTransparency=1,Text="OPACITY",TextColor3=Color3.fromRGB(230,230,230),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},PG_OPT)
+local opVal=I("TextLabel",{Size=UDim2.new(.4,-20,0,14),Position=UDim2.new(.6,0,0,330),BackgroundTransparency=1,Text="100%",TextColor3=Color3.fromRGB(255,255,255),TextSize=11,Font=FB,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=204},PG_OPT)
+local opTrack=I("Frame",{Size=UDim2.new(1,-20,0,4),Position=UDim2.new(0,10,0,350),BackgroundColor3=Color3.fromRGB(50,50,50),BorderSizePixel=0,ZIndex=204},PG_OPT)
 local opFill=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=0,ZIndex=205},opTrack)
 local opKnob=I("Frame",{Size=UDim2.new(0,10,0,14),Position=UDim2.new(1,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(255,255,255),BorderSizePixel=1,ZIndex=206},opTrack)
 opKnob.BorderColor3=Color3.fromRGB(0,0,0)
-local opHit=I("TextButton",{Size=UDim2.new(1,0,0,22),Position=UDim2.new(0,0,0,188),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},CTR)
+local opHit=I("TextButton",{Size=UDim2.new(1,-20,0,22),Position=UDim2.new(0,10,0,342),BackgroundTransparency=1,Text="",AutoButtonColor=false,ZIndex=207},PG_OPT)
+I("TextLabel",{Size=UDim2.new(1,-20,0,14),Position=UDim2.new(0,10,0,370),BackgroundTransparency=1,Text="Độ trong suốt của bảng menu",TextColor3=Color3.fromRGB(130,130,130),TextSize=10,Font=FT,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},PG_OPT)
 local opDrag=false
 local function opUpd()
 local mx=U:GetMouseLocation().X
@@ -383,6 +410,9 @@ end
 opHit.InputBegan:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then opDrag=true opUpd()end end)
 U.InputChanged:Connect(function(i)if opDrag and(i.UserInputType.Name=="MouseMovement"or i.UserInputType.Name=="Touch")then opUpd()end end)
 U.InputEnded:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then opDrag=false end end)
+PAGES["ESP"].Visible=true
+TABBTNS["ESP"].btn.BackgroundColor3=Color3.fromRGB(50,50,50)
+TABBTNS["ESP"].btn.TextLabel.TextColor3=Color3.fromRGB(255,255,255)
 local function applyStats()
 local ch=pl.Character
 if not ch then return end
@@ -393,8 +423,12 @@ if JPW then
 if not hu.UseJumpPower then hu.UseJumpPower=true end
 if hu.JumpPower~=JPW_VAL then hu.JumpPower=JPW_VAL end
 end
+if cam and cam.FieldOfView~=FOV_VAL then cam.FieldOfView=FOV_VAL end
 end
 R.Heartbeat:Connect(applyStats)
+R.RenderStepped:Connect(function()
+if cam and cam.FieldOfView~=FOV_VAL then cam.FieldOfView=FOV_VAL end
+end)
 local function hookChar(ch)
 task.wait(1)
 local hu=ch:WaitForChild("Humanoid",5)
@@ -409,4 +443,4 @@ MB.MouseButton1Click:Connect(function()
 if MENU_OPEN then closeMenu() else openMenu() end
 end)
 closeBtn.MouseButton1Click:Connect(closeMenu)
-print("[ESP] v2 LOADED")
+print("[ESP] UI LOADED")

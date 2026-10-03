@@ -15,7 +15,7 @@ local fd=I("Folder",{Name="ESP_PvPFolder"},workspace)
 local HR,LR,OFF=1000,1000,30
 local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
 local SK,CP,CM=Color3.fromRGB(0,0,0),Color3.fromRGB(255,40,40),Color3.fromRGB(40,120,255)
-local ON,CH,BX,TP,SKEL,RAINBOW=true,true,true,true,false,true
+local ON,HL,CH,BX,TP,SKEL,RAINBOW=true,true,true,true,true,false,true
 local D,CC={},{}
 local SKEL_BONES={
 {"Head","UpperTorso"},
@@ -94,12 +94,11 @@ I("UICorner",{CornerRadius=UDim.new(1,0)},hf)
 local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,36),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
 local sk={}
 for i=1,14 do
-local glow=I("Frame",{BackgroundColor3=col,BackgroundTransparency=.65,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=7},sg)
+local glow=I("Frame",{BackgroundColor3=col,BackgroundTransparency=.7,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=7},sg)
 I("UICorner",{CornerRadius=UDim.new(1,0)},glow)
 local f=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=8},sg)
 I("UICorner",{CornerRadius=UDim.new(1,0)},f)
-local fs=I("UIStroke",{Color=Color3.fromRGB(255,255,255),Thickness=1.2,Transparency=0},f)
-sk[i]={f=f,g=glow,s=fs}
+sk[i]={f=f,g=glow}
 end
 D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,tm=tm,sk=sk,c=col,t=GT(p),l=0,ts=0}end
 local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()for _,o in ipairs(d.sk)do o.f:Destroy()o.g:Destroy()end D[p]=nil end
@@ -132,13 +131,12 @@ end
 local rot=math.deg(math.atan2(dy,dx))
 local cx=(s1.X+s2.X)/2
 local cy=(s1.Y+s2.Y)/2
-bone.f.Size=UDim2.new(0,len,0,3)
+bone.f.Size=UDim2.new(0,len,0,1)
 bone.f.Position=UDim2.new(0,cx,0,cy)
 bone.f.Rotation=rot
 bone.f.BackgroundColor3=color
 bone.f.Visible=true
-bone.s.Color=color
-bone.g.Size=UDim2.new(0,len+4,0,9)
+bone.g.Size=UDim2.new(0,len+2,0,5)
 bone.g.Position=UDim2.new(0,cx,0,cy)
 bone.g.Rotation=rot
 bone.g.BackgroundColor3=color
@@ -260,7 +258,7 @@ else
 d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false
 for i=1,14 do d.sk[i].f.Visible=false d.sk[i].g.Visible=false end
 end
-if ds<=HR and ds>3 then
+if HL and ds<=HR and ds>3 then
 if d.h.Adornee~=ch then d.h.Adornee=ch end
 d.h.Enabled=true
 if TP then
@@ -279,7 +277,7 @@ local fabOuter=I("Frame",{Size=UDim2.new(0,56,0,56),Position=UDim2.new(.5,-28,.5
 local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),Text="ESP",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=2,ZIndex=101},fabOuter)
 MB.BorderColor3=Color3.fromRGB(255,255,255)
 DG(MB,MB)
-local MW,MH=440,380
+local MW,MH=440,420
 local M=I("CanvasGroup",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(0,0,0),GroupTransparency=1,BorderSizePixel=2,Visible=false,Active=true,ZIndex=200},sg)
 M.BorderColor3=Color3.fromRGB(255,255,255)
 local MENU_OPEN=false
@@ -303,9 +301,9 @@ local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),
 local closeBtn=I("TextButton",{Size=UDim2.new(0,26,0,26),Position=UDim2.new(1,-32,.5,-13),BackgroundColor3=Color3.fromRGB(40,0,0),Text="X",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},HD)
 closeBtn.BorderColor3=Color3.fromRGB(255,255,255)
 DG(M,HD)
-local CTL=I("Frame",{Size=UDim2.new(0,200,0,320),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
-local CTR=I("Frame",{Size=UDim2.new(0,200,0,320),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
-I("Frame",{Size=UDim2.new(0,1,0,320),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
+local CTL=I("Frame",{Size=UDim2.new(0,200,0,360),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
+local CTR=I("Frame",{Size=UDim2.new(0,200,0,360),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
+I("Frame",{Size=UDim2.new(0,1,0,360),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
 local FB=Enum.Font.GothamBold
 local function TGL2(parent,y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,0,0,34),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(20,20,20),Text="",BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},parent)
@@ -348,13 +346,16 @@ U.InputChanged:Connect(function(i)if drag and(i.UserInputType.Name=="MouseMoveme
 U.InputEnded:Connect(function(i)if i.UserInputType.Name=="MouseButton1"or i.UserInputType.Name=="Touch"then drag=false end end)
 return val,fill
 end
+-- CỘT TRÁI: ESP + VISUAL
 TGL2(CTL,0,"ESP",ON,function(v)ON=v if ON then for _,p in ipairs(P:GetPlayers())do CE(p)end else CA()end end)
-TGL2(CTL,42,"CHAMS",CH,function(v)CH=v RC()end)
-TGL2(CTL,84,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
-TGL2(CTL,126,"TEAM",TP,function(v)TP=v end)
-TGL2(CTL,168,"SKELETON",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,o in ipairs(d.sk)do o.f.Visible=false o.g.Visible=false end end end end)
-TGL2(CTL,210,"RAINBOW",RAINBOW,function(v)RAINBOW=v end)
-TGL2(CTL,252,"TIA",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
+TGL2(CTL,42,"HIGHLIGHT",HL,function(v)HL=v if not HL then for _,d in pairs(D)do d.h.Enabled=false end end end)
+TGL2(CTL,84,"CHAMS",CH,function(v)CH=v RC()end)
+TGL2(CTL,126,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
+TGL2(CTL,168,"TEAM",TP,function(v)TP=v end)
+TGL2(CTL,210,"SKELETON",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,o in ipairs(d.sk)do o.f.Visible=false o.g.Visible=false end end end end)
+TGL2(CTL,252,"RAINBOW",RAINBOW,function(v)RAINBOW=v end)
+TGL2(CTL,294,"TIA",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
+-- CỘT PHẢI: MOVEMENT
 TGL2(CTR,0,"SPEED",SPD,function(v)SPD=v end)
 local spdVal,spdFill=SLIDER(CTR,42,"WALK",SPD_VAL,16,300,function(v)SPD_VAL=v end)
 TGL2(CTR,84,"JUMP",JPW,function(v)JPW=v end)
@@ -408,4 +409,4 @@ MB.MouseButton1Click:Connect(function()
 if MENU_OPEN then closeMenu() else openMenu() end
 end)
 closeBtn.MouseButton1Click:Connect(closeMenu)
-print("[ESP] RGB SKELETON LOADED")
+print("[ESP] v2 LOADED")

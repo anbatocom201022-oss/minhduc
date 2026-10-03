@@ -15,10 +15,31 @@ local fd=I("Folder",{Name="ESP_PvPFolder"},workspace)
 local HR,LR,OFF=1000,1000,30
 local H1,H2,H3=Color3.fromRGB(80,230,120),Color3.fromRGB(250,200,70),Color3.fromRGB(240,70,70)
 local SK,CP,CM=Color3.fromRGB(0,0,0),Color3.fromRGB(255,40,40),Color3.fromRGB(40,120,255)
-local AC=Color3.fromRGB(0,220,255)
-local BG=Color3.fromRGB(4,10,16)
-local ON,CH,BX,TP=true,true,true,true
+local ON,CH,BX,TP,SKEL=true,true,true,true,false
 local D,CC={},{}
+local SKEL_BONES={
+{"Head","UpperTorso"},
+{"UpperTorso","LowerTorso"},
+{"UpperTorso","LeftUpperArm"},
+{"LeftUpperArm","LeftLowerArm"},
+{"LeftLowerArm","LeftHand"},
+{"UpperTorso","RightUpperArm"},
+{"RightUpperArm","RightLowerArm"},
+{"RightLowerArm","RightHand"},
+{"LowerTorso","LeftUpperLeg"},
+{"LeftUpperLeg","LeftLowerLeg"},
+{"LeftLowerLeg","LeftFoot"},
+{"LowerTorso","RightUpperLeg"},
+{"RightUpperLeg","RightLowerLeg"},
+{"RightLowerLeg","RightFoot"},
+}
+local SKEL_BONES_R6={
+{"Head","Torso"},
+{"Torso","Left Arm"},
+{"Torso","Right Arm"},
+{"Torso","Left Leg"},
+{"Torso","Right Leg"},
+}
 local function PN(v)if type(v)=="number"then return v end if type(v)=="string"then return tonumber(v:gsub(",",""))or 0 end return 0 end
 local function GL(p)local ls=p:FindFirstChild("leaderstats")
 if ls then for _,n in ipairs({"Level","Lvl","Lv","level"})do local v=ls:FindFirstChild(n)if v then return PN(v.Value)end end end
@@ -71,8 +92,14 @@ I("UICorner",{CornerRadius=UDim.new(1,0)},hb)
 local hf=I("Frame",{Size=UDim2.new(1,0,1,0),BackgroundColor3=H1,BorderSizePixel=0},hb)
 I("UICorner",{CornerRadius=UDim.new(1,0)},hf)
 local hl=I("TextLabel",{Size=UDim2.new(1,0,0,9),Position=UDim2.new(0,0,0,36),BackgroundTransparency=1,Text="",TextColor3=Color3.fromRGB(230,230,240),TextSize=9,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Center,TextStrokeTransparency=0,TextStrokeColor3=SK},ct)
-D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,tm=tm,c=col,t=GT(p),l=0,ts=0}end
-local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()D[p]=nil end
+local sk={}
+for i=1,14 do
+local f=I("Frame",{BackgroundColor3=col,BackgroundTransparency=0,BorderSizePixel=0,AnchorPoint=Vector2.new(.5,.5),Visible=false,ZIndex=7},sg)
+I("UICorner",{CornerRadius=UDim.new(1,0)},f)
+sk[i]=f
+end
+D[p]={h=h,ln=ln,bx=bx,bst=bst,ct=ct,hf=hf,lv=lv,dl=dl,hl=hl,tm=tm,sk=sk,c=col,t=GT(p),l=0,ts=0}end
+local function RE(p)local d=D[p]if not d then return end d.h:Destroy()d.ln:Destroy()d.bx:Destroy()d.ct:Destroy()for _,f in ipairs(d.sk)do f:Destroy()end D[p]=nil end
 local function CA()for p in pairs(D)do RE(p)end end
 local function RC()for p,d in pairs(D)do AC2(d.h,d.c)d.bst.Color=d.c end end
 for _,p in ipairs(P:GetPlayers())do CE(p)end
@@ -83,6 +110,20 @@ R.Heartbeat:Connect(function(dt)FT=FT+dt end)
 local function DL(f,x1,y1,x2,y2)local dx,dy=x2-x1,y2-y1 local L2=math.sqrt(dx*dx+dy*dy)
 if L2<1 then f.Visible=false return end
 f.Size=UDim2.new(0,L2,0,1)f.Position=UDim2.new(0,(x1+x2)/2,0,(y1+y2)/2)f.Rotation=math.deg(math.atan2(dy,dx))f.Visible=true end
+local function drawBone(f,p1,p2,color)
+local s1,o1=cam:WorldToScreenPoint(p1)
+local s2,o2=cam:WorldToScreenPoint(p2)
+if not o1 or not o2 or s1.Z<=0 or s2.Z<=0 then f.Visible=false return end
+local dx=s2.X-s1.X
+local dy=s2.Y-s1.Y
+local len=math.sqrt(dx*dx+dy*dy)
+if len<1 then f.Visible=false return end
+f.Size=UDim2.new(0,len,0,2)
+f.Position=UDim2.new(0,(s1.X+s2.X)/2,0,(s1.Y+s2.Y)/2)
+f.Rotation=math.deg(math.atan2(dy,dx))
+f.BackgroundColor3=color
+f.Visible=true
+end
 local function DB(bx,ch)
 local hr=ch:FindFirstChild("HumanoidRootPart")
 if not hr then bx.Visible=false return end
@@ -144,6 +185,32 @@ if pc>.5 then d.hf.BackgroundColor3=H1 elseif pc>.25 then d.hf.BackgroundColor3=
 d.lv.Text="Lv "..(d.l>0 and tostring(d.l)or "?")
 d.dl.Text=math.floor(ds+.5).."m"
 d.hl.Text=math.floor(hu.Health+.5).."/"..math.floor(hu.MaxHealth+.5).." HP"
+if SKEL and ds<=HR then
+local boneList
+if ch:FindFirstChild("UpperTorso")then boneList=SKEL_BONES else boneList=SKEL_BONES_R6 end
+local bc
+if TP then
+if d.t=="pirate"then bc=CP
+elseif d.t=="marine"then bc=CM
+else bc=d.c end
+else bc=d.c end
+for i=1,14 do
+if i<=#boneList then
+local b=boneList[i]
+local p1=ch:FindFirstChild(b[1])
+local p2=ch:FindFirstChild(b[2])
+if p1 and p2 then
+drawBone(d.sk[i],p1.Position,p2.Position,bc)
+else
+d.sk[i].Visible=false
+end
+else
+d.sk[i].Visible=false
+end
+end
+else
+for i=1,14 do d.sk[i].Visible=false end
+end
 if BX and ds<=HR and ds>3 then
 if TP then
 if d.t=="pirate"then d.bst.Color=CP
@@ -161,7 +228,10 @@ else d.ln.BackgroundColor3=d.c end
 local bp,bs2=cam:WorldToScreenPoint(hr.Position)
 if bs2 and bp.Z>0 then DL(d.ln,sx,sy,bp.X,bp.Y)else d.ln.Visible=false end
 else d.ln.Visible=false end
-else d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false end
+else
+d.ct.Visible=false d.ln.Visible=false d.bx.Visible=false
+for i=1,14 do d.sk[i].Visible=false end
+end
 if ds<=HR and ds>3 then
 if d.h.Adornee~=ch then d.h.Adornee=ch end
 d.h.Enabled=true
@@ -171,29 +241,48 @@ elseif d.t=="marine"then d.h.FillColor=CM d.h.OutlineColor=Color3.fromRGB(150,20
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.FillColor=d.c d.h.OutlineColor=Color3.fromRGB(255,255,255)end
 else d.h.Enabled=false end
-else d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false end
+else
+d.ct.Visible=false d.h.Enabled=false d.ln.Visible=false d.bx.Visible=false
+for i=1,14 do d.sk[i].Visible=false end
+end
 end end end)local SPD,JPW=false,false
 local SPD_VAL,JPW_VAL=16,50
 local fabOuter=I("Frame",{Size=UDim2.new(0,56,0,56),Position=UDim2.new(.5,-28,.5,-28),BackgroundTransparency=1,ZIndex=100},sg)
 local MB=I("TextButton",{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),Text="ESP",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=2,ZIndex=101},fabOuter)
 MB.BorderColor3=Color3.fromRGB(255,255,255)
 DG(MB,MB)
-local MW,MH=440,320
-local M=I("Frame",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(0,0,0),BorderSizePixel=2,Visible=false,Active=true,ZIndex=200},sg)
+local MW,MH=440,340
+local M=I("CanvasGroup",{Size=UDim2.new(0,MW,0,MH),Position=UDim2.new(.5,0,.5,0),AnchorPoint=Vector2.new(.5,.5),BackgroundColor3=Color3.fromRGB(0,0,0),GroupTransparency=1,BorderSizePixel=2,Visible=false,Active=true,ZIndex=200},sg)
 M.BorderColor3=Color3.fromRGB(255,255,255)
+local MENU_OPEN=false
+local function openMenu()
+if MENU_OPEN then return end
+MENU_OPEN=true
+M.Visible=true
+M.Size=UDim2.new(0,MW*0.7,0,MH*0.7)
+M.GroupTransparency=1
+TS:Create(M,TweenInfo.new(.22,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Size=UDim2.new(0,MW,0,MH),GroupTransparency=0}):Play()
+end
+local function closeMenu()
+if not MENU_OPEN then return end
+MENU_OPEN=false
+TS:Create(M,TweenInfo.new(.15,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Size=UDim2.new(0,MW*0.7,0,MH*0.7),GroupTransparency=1}):Play()
+task.wait(.15)
+M.Visible=false
+end
 local HD=I("TextButton",{Size=UDim2.new(1,0,0,36),BackgroundColor3=Color3.fromRGB(20,20,20),Text="",BorderSizePixel=0,AutoButtonColor=false,ZIndex=201},M)
 local hdr=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,12,0,0),BackgroundTransparency=1,Text="ESP MENU",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=202},HD)
 local closeBtn=I("TextButton",{Size=UDim2.new(0,26,0,26),Position=UDim2.new(1,-32,.5,-13),BackgroundColor3=Color3.fromRGB(40,0,0),Text="X",TextColor3=Color3.fromRGB(255,255,255),TextSize=13,Font=Enum.Font.GothamBold,BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},HD)
 closeBtn.BorderColor3=Color3.fromRGB(255,255,255)
 DG(M,HD)
-local CTL=I("Frame",{Size=UDim2.new(0,200,0,260),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
-local CTR=I("Frame",{Size=UDim2.new(0,200,0,260),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
-I("Frame",{Size=UDim2.new(0,1,0,260),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
+local CTL=I("Frame",{Size=UDim2.new(0,200,0,280),Position=UDim2.new(0,12,0,48),BackgroundTransparency=1,ZIndex=202},M)
+local CTR=I("Frame",{Size=UDim2.new(0,200,0,280),Position=UDim2.new(0,226,0,48),BackgroundTransparency=1,ZIndex=202},M)
+I("Frame",{Size=UDim2.new(0,1,0,280),Position=UDim2.new(0,218,0,48),BackgroundColor3=Color3.fromRGB(80,80,80),BorderSizePixel=0,ZIndex=205},M)
 local FB=Enum.Font.GothamBold
 local function TGL2(parent,y,txt,init,cb)
 local row=I("TextButton",{Size=UDim2.new(1,0,0,34),Position=UDim2.new(0,0,0,y),BackgroundColor3=Color3.fromRGB(20,20,20),Text="",BorderSizePixel=1,AutoButtonColor=false,ZIndex=203},parent)
 row.BorderColor3=Color3.fromRGB(80,80,80)
-local lbl=I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},row)
+I("TextLabel",{Size=UDim2.new(1,-50,1,0),Position=UDim2.new(0,10,0,0),BackgroundTransparency=1,Text=txt,TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=204},row)
 local state=I("TextLabel",{Size=UDim2.new(0,38,1,0),Position=UDim2.new(1,-42,0,0),BackgroundTransparency=1,Text=init and "ON" or "OFF",TextColor3=Color3.fromRGB(255,255,255),TextSize=12,Font=FB,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=204},row)
 local on=init
 row.MouseButton1Click:Connect(function()
@@ -235,6 +324,8 @@ TGL2(CTL,0,"ESP",ON,function(v)ON=v if ON then for _,p in ipairs(P:GetPlayers())
 TGL2(CTL,42,"CHAMS",CH,function(v)CH=v RC()end)
 TGL2(CTL,84,"BOX",BX,function(v)BX=v if not BX then for _,d in pairs(D)do d.bx.Visible=false end end end)
 TGL2(CTL,126,"TEAM",TP,function(v)TP=v end)
+TGL2(CTL,168,"SKELETON",SKEL,function(v)SKEL=v if not SKEL then for _,d in pairs(D)do for _,f in ipairs(d.sk)do f.Visible=false end end end end)
+TGL2(CTL,210,"TIA",LR>0,function(v)LR=v and 1000 or 0 if not v then for _,d in pairs(D)do d.ln.Visible=false end end end)
 TGL2(CTR,0,"SPEED",SPD,function(v)SPD=v end)
 local spdVal,spdFill=SLIDER(CTR,42,"WALK",SPD_VAL,16,300,function(v)SPD_VAL=v end)
 TGL2(CTR,84,"JUMP",JPW,function(v)JPW=v end)
@@ -285,9 +376,7 @@ end
 if pl.Character then hookChar(pl.Character) end
 pl.CharacterAdded:Connect(hookChar)
 MB.MouseButton1Click:Connect(function()
-M.Visible=not M.Visible
+if MENU_OPEN then closeMenu() else openMenu() end
 end)
-closeBtn.MouseButton1Click:Connect(function()
-M.Visible=false
-end)
-print("[ESP] UI LOADED")
+closeBtn.MouseButton1Click:Connect(closeMenu)
+print("[ESP] SKELETON + ANIM LOADED")
